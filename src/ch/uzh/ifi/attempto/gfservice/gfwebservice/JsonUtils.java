@@ -40,6 +40,9 @@ public class JsonUtils {
 	 */
 	public static Set<String> makeStringSetFromJsonArray(JSONArray jsonArray) {
 		Set<String> set = new HashSet<String>();
+		if (jsonArray == null) {
+			return set;
+		}
 		for (Object o : jsonArray) {
 			set.add(o.toString());
 		}
@@ -57,6 +60,9 @@ public class JsonUtils {
 	 */
 	public static Map<String, Set<String>> makeMultimapSetFromJsonArray(JSONArray jsonArray, String keyName, String valName) {
 		Map<String, Set<String>> map = new HashMap<String, Set<String>>();
+		if (jsonArray == null) {
+			return map;
+		}
 		for (Object o : jsonArray) {
 			JSONObject jo = (JSONObject) o;
 

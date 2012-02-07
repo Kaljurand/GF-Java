@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,9 +39,11 @@ public class GfWebServiceTest {
 	private static final Set<String> LANGUAGES = new HashSet<String>(Arrays.asList(new String[] { "GoEst", "GoApp", "GoEng" }));
 	private static URI URI = null;
 
-	private static final String T_PARSE_1_CAT = "Number";
-	private static final String T_PARSE_1_INPUT = "three";
-	private static final Set<String> T_PARSE_1_OUT_TREES = new HashSet<String>(Arrays.asList(new String[] { "n3" }));
+	private static final String UNPARSABLE_STRING = "adkasdasdasda;slqwe0otkfef0sfs d ada-sdasd";
+
+	private static final String T_PARSE_0_CAT = "Number";
+	private static final String T_PARSE_0_INPUT = "three";
+	private static final Set<String> T_PARSE_0_OUT_TREES = new HashSet<String>(Arrays.asList(new String[] { "n3" }));
 
 	private static final String T_LINEARIZE_1_TREE = "n3";
 	private static final Set<String> T_LINEARIZE_1_OUT_TEXTS = new HashSet<String>(Arrays.asList(new String[] { "3" }));
@@ -52,8 +55,8 @@ public class GfWebServiceTest {
 
 	private static final String T_COMPLETE_1_OUT = "go five meters back";
 
-	private static final String T_TRANSLATE_1_CAT = T_PARSE_1_CAT;
-	private static final String T_TRANSLATE_1_INPUT = T_PARSE_1_INPUT;
+	private static final String T_TRANSLATE_1_CAT = T_PARSE_0_CAT;
+	private static final String T_TRANSLATE_1_INPUT = T_PARSE_0_INPUT;
 	private static final Set<String> T_TRANSLATE_1_OUT_TRANSLATIONS = new HashSet<String>(Arrays.asList(new String[] { "3" }));
 
 	static {
@@ -83,8 +86,19 @@ public class GfWebServiceTest {
 	@Test
 	public void testParse() {
 		try {
-			GfServiceResultParse result = GF_SERVICE.parse(T_PARSE_1_CAT, T_PARSE_1_INPUT, FROM);
-			assertEquals(T_PARSE_1_OUT_TREES, result.getTrees(FROM));
+			GfServiceResultParse result = GF_SERVICE.parse(T_PARSE_0_CAT, T_PARSE_0_INPUT, FROM);
+			assertEquals(T_PARSE_0_OUT_TREES, result.getTrees(FROM));
+		} catch (GfServiceException e) {
+			fail(MSG_GF_SERVICE_EXCEPTION);
+		}
+	}
+
+
+	@Test
+	public void testParse1() {
+		try {
+			GfServiceResultParse result = GF_SERVICE.parse(T_PARSE_0_CAT, UNPARSABLE_STRING, FROM);
+			assertEquals(Collections.EMPTY_SET, result.getTrees(FROM));
 		} catch (GfServiceException e) {
 			fail(MSG_GF_SERVICE_EXCEPTION);
 		}

@@ -18,14 +18,28 @@ public class Params {
 		add(Param.COMMAND, command.toString().toLowerCase());
 	}
 
+
+	/**
+	 * <p>Adds a key-value pair.</p>
+	 * <p>Passing a negative integer as value will not add a new pair.</p>
+	 *
+	 * @param key webservice query key
+	 * @param value webservice query value
+	 */
 	public void add(Param key, int value) {
-		if (value < 0) {
-			add(key, "-1");
-		} else {
+		if (value >= 0) {
 			add(key, Integer.toString(value));
 		}
 	}
 
+
+	/**
+	 * <p>Adds a key-value pair.</p>
+	 * <p>Passing <code>null</code> as value will not add a new pair.</p>
+	 *
+	 * @param key webservice query key
+	 * @param value webservice query value
+	 */
 	public void add(Param key, String value) {
 		if (value != null) {
 			String keyAsStr = key.toString().toLowerCase();
@@ -33,6 +47,10 @@ public class Params {
 		}
 	}
 
+
+	/**
+	 * @return list of pairs
+	 */
 	public List<NameValuePair> get() {
 		return pairs;
 	}
