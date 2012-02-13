@@ -6,8 +6,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
@@ -48,6 +50,8 @@ public class GfWebServiceTest {
 	private static final String T_LINEARIZE_1_TREE = "n3";
 	private static final Set<String> T_LINEARIZE_1_OUT_TEXTS = new HashSet<String>(Arrays.asList(new String[] { "3" }));
 
+	private static final Map<String, Set<String>> T_LINEARIZE_2_OUT = new HashMap<String, Set<String>>();
+
 	private static final List<String> T_RANDOM_1_OUT = Arrays.asList(new String[] { "it does not", "matter" });
 
 	private static final String T_COMPLETE_0_INPUT = "go t";
@@ -67,6 +71,10 @@ public class GfWebServiceTest {
 		}
 
 		GF_SERVICE = new GfWebService(URI, GRAMMAR);
+
+		T_LINEARIZE_2_OUT.put("GoEst", new HashSet<String>(Arrays.asList(new String[] { "kolm" })));
+		T_LINEARIZE_2_OUT.put("GoEng", new HashSet<String>(Arrays.asList(new String[] { "three" })));
+		T_LINEARIZE_2_OUT.put("GoApp", new HashSet<String>(Arrays.asList(new String[] { "3" })));
 	}
 
 
@@ -123,6 +131,17 @@ public class GfWebServiceTest {
 			fail(MSGY_ILLEGAL_ARGUMENT_EXCEPTION);
 		} catch (IllegalArgumentException e) {
 			assertEquals("Tree MUST be given", e.getMessage());
+		} catch (GfServiceException e) {
+			fail(MSG_GF_SERVICE_EXCEPTION);
+		}
+	}
+
+
+	@Test
+	public void testLinearize2() {
+		try {
+			GfServiceResultLinearize result = GF_SERVICE.linearize(T_LINEARIZE_1_TREE, null);
+			assertEquals(T_LINEARIZE_2_OUT, result.getTexts());
 		} catch (GfServiceException e) {
 			fail(MSG_GF_SERVICE_EXCEPTION);
 		}

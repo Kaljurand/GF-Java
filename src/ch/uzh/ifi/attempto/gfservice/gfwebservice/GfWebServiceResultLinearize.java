@@ -30,4 +30,9 @@ public class GfWebServiceResultLinearize implements GfServiceResultLinearize {
 	public Set<String> getTexts(String to) {
 		return mMultimap.get(to);
 	}
+
+
+	public Map<String, Set<String>> getTexts() {
+		return mMultimap;
+	}
 }
