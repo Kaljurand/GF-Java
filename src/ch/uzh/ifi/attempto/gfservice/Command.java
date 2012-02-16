@@ -6,5 +6,6 @@ public enum Command {
 	LINEARIZE,
 	TRANSLATE,
 	RANDOM,
-	COMPLETE;
+	COMPLETE,
+	ALIGNMENT;
 }

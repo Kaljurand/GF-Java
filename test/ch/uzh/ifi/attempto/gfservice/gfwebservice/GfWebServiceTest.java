@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import ch.uzh.ifi.attempto.gfservice.GfService;
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
+import ch.uzh.ifi.attempto.gfservice.GfServiceResultAlignment;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultComplete;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultGrammar;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultLinearize;
@@ -62,6 +63,8 @@ public class GfWebServiceTest {
 	private static final String T_TRANSLATE_1_CAT = T_PARSE_0_CAT;
 	private static final String T_TRANSLATE_1_INPUT = T_PARSE_0_INPUT;
 	private static final Set<String> T_TRANSLATE_1_OUT_TRANSLATIONS = new HashSet<String>(Arrays.asList(new String[] { "3" }));
+
+	private static final String T_ALIGNMENT_0_OUT_DATAURI_PREFIX = "data:image/png;base64,";
 
 	static {
 		try {
@@ -220,6 +223,19 @@ public class GfWebServiceTest {
 			}
 		}
 		assertEquals(T_COMPLETE_1_OUT + " ", input);
+	}
+
+
+	@Test
+	public void testAlignment() {
+		try {
+			GfServiceResultAlignment result = GF_SERVICE.alignment(T_LINEARIZE_1_TREE);
+			//System.out.println("<img src=\"" + result.getAlignmentAsDataUri() + "\">");
+			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
+					result.getAlignmentAsDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
+		} catch (GfServiceException e) {
+			fail(MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
 	}
 
 }

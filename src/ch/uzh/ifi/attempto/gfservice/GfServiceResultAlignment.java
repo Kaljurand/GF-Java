@@ -2,4 +2,6 @@ package ch.uzh.ifi.attempto.gfservice;
 
 public interface GfServiceResultAlignment extends GfResult {
 
+	String getAlignmentAsDataUri();
+
 }

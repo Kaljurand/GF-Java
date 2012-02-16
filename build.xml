@@ -3,7 +3,7 @@
 <project name="GF Java" default="buildeverything" basedir=".">
 
     <property name="version" value="20120203"/>
-    <property name="libs" value="lib/json_simple-1.1.jar;lib/httpcore-4.1.1.jar;lib/httpclient-4.1.1.jar;lib/commons-lang-2.2.jar;lib/commons-logging-1.1.jar"/>
+    <property name="libs" value="lib/commons-codec-1.6.jar;lib/json_simple-1.1.jar;lib/httpcore-4.1.1.jar;lib/httpclient-4.1.1.jar;lib/commons-lang-2.2.jar;lib/commons-logging-1.1.jar"/>
     <property name="jar" value="gf-java.jar"/>
     <property name="classes" location="bin/"/>
     <property name="test_src" location="test/"/>

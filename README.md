@@ -26,7 +26,7 @@ Starting:
 
 > curl http://localhost:41296
 
-#### Examples
+#### Commandline examples
 
 Instead of `json_xs` one can use e.g. `python -mjson.tool`.
 
@@ -38,7 +38,13 @@ Instead of `json_xs` one can use e.g. `python -mjson.tool`.
 
 > curl "http://localhost:41296/grammars/Go.pgf?command=translate&cat=Number&from=GoEng&to=GoApp&input=three" | json_xs
 
+> curl "http://localhost:41296/grammars/Go.pgf?command=random&cat=Number&input=t" | json_xs
+
 > curl "http://localhost:41296/grammars/Go.pgf?command=complete&cat=Number&input=t" | json_xs
+
+> curl -i "http://localhost:41296/grammars/Go.pgf?command=alignment&tree=n3"
+
+> curl "http://localhost:41296/grammars/Go.pgf?command=alignment&tree=n3" | display
 
 
 Building

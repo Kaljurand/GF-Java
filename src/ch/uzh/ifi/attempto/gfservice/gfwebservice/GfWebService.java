@@ -24,10 +24,14 @@ import ch.uzh.ifi.attempto.gfservice.Command;
 import ch.uzh.ifi.attempto.gfservice.GfService;
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultAbstrtree;
-import ch.uzh.ifi.attempto.gfservice.GfServiceResultAlignment;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultParsetree;
 import ch.uzh.ifi.attempto.gfservice.Param;
 
+/**
+ * TODO: rethink the RuntimeExceptions
+ *
+ * @author Kaarel Kaljurand
+ */
 public class GfWebService implements GfService {
 
 	private static final int MAX_HTTP_GET_LENGTH = 1000;
@@ -146,16 +150,30 @@ public class GfWebService implements GfService {
 	}
 
 
-	public GfServiceResultAlignment alignment(String tree) {
-		throw new RuntimeException("NOT IMPLEMENTED");
+	public GfWebServiceResultAlignment alignment(String tree) throws GfServiceException {
+		if (tree == null) {
+			throw new IllegalArgumentException("Tree MUST be given");
+		}
+		Params p = new Params(Command.ALIGNMENT);
+		p.add(Param.TREE, tree);
+		byte[] response = getResponseAsBytes(p.get());
+		return new GfWebServiceResultAlignment(response);
 	}
 
 
 	private String getResponseAsString(List<NameValuePair> nvps) {
-		DefaultHttpClient httpclient = new DefaultHttpClient();
+		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpUriRequest request = getHttpUriRequest(nvps);
-		return getEntity(httpclient, request);
+		return getHttpEntityAsString(httpClient, request);
 	}
+
+
+	private byte[] getResponseAsBytes(List<NameValuePair> nvps) {
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		HttpUriRequest request = getHttpUriRequest(nvps);
+		return getHttpEntityAsByteArray(httpClient, request);
+	}
+
 
 	/**
 	 * We create an HTTP GET query from the given parameters. If it turns out to be
@@ -180,31 +198,48 @@ public class GfWebService implements GfService {
 	}
 
 
-	private static String getEntity(DefaultHttpClient httpclient, HttpUriRequest httpRequest) {
+	private static String getHttpEntityAsString(DefaultHttpClient httpClient, HttpUriRequest httpRequest) {
 		try {
-			HttpResponse response = httpclient.execute(httpRequest);
-			HttpEntity entity = response.getEntity();
-
-			if (entity == null) {
-				throw new RuntimeException(ERROR_MESSAGE + ": " + response.getStatusLine());
-			}
-			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode != HttpStatus.SC_OK) {
-				throw new RuntimeException(ERROR_MESSAGE + ": " + response.getStatusLine());
-			}
+			HttpEntity entity = getHttpEntity(httpClient, httpRequest);
 			// Assuming that the webservice returns data in UTF8,
 			// in case it does not declare the encoding.
 			if (entity.getContentEncoding() == null) {
 				return EntityUtils.toString(entity, HTTP.UTF_8);
 			}
 			return EntityUtils.toString(entity);
-
 		} catch (ClientProtocolException e) {
 			throw new RuntimeException(ERROR_MESSAGE + ": " + e.getMessage());
 		} catch (IOException e) {
 			throw new RuntimeException(ERROR_MESSAGE + ": " + e.getMessage());
 		} finally {
-			httpclient.getConnectionManager().shutdown();
+			httpClient.getConnectionManager().shutdown();
 		}
+	}
+
+
+	private static byte[] getHttpEntityAsByteArray(DefaultHttpClient httpClient, HttpUriRequest httpRequest) {
+		try {
+			return EntityUtils.toByteArray(getHttpEntity(httpClient, httpRequest));
+		} catch (ClientProtocolException e) {
+			throw new RuntimeException(ERROR_MESSAGE + ": " + e.getMessage());
+		} catch (IOException e) {
+			throw new RuntimeException(ERROR_MESSAGE + ": " + e.getMessage());
+		} finally {
+			httpClient.getConnectionManager().shutdown();
+		}
+	}
+
+
+	private static HttpEntity getHttpEntity(DefaultHttpClient httpclient, HttpUriRequest httpRequest) throws ClientProtocolException, IOException {
+		HttpResponse response = httpclient.execute(httpRequest);
+		HttpEntity entity = response.getEntity();
+		if (entity == null) {
+			throw new RuntimeException(ERROR_MESSAGE + ": " + response.getStatusLine());
+		}
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode != HttpStatus.SC_OK) {
+			throw new RuntimeException(ERROR_MESSAGE + ": " + response.getStatusLine());
+		}
+		return entity;
 	}
 }
