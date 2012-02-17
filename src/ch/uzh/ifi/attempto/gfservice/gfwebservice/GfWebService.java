@@ -23,8 +23,6 @@ import org.json.simple.parser.ParseException;
 import ch.uzh.ifi.attempto.gfservice.Command;
 import ch.uzh.ifi.attempto.gfservice.GfService;
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
-import ch.uzh.ifi.attempto.gfservice.GfServiceResultAbstrtree;
-import ch.uzh.ifi.attempto.gfservice.GfServiceResultParsetree;
 import ch.uzh.ifi.attempto.gfservice.Param;
 
 /**
@@ -138,23 +136,28 @@ public class GfWebService implements GfService {
 	}
 
 
-	public GfServiceResultAbstrtree abstrtree(String tree) {
-		throw new RuntimeException("NOT IMPLEMENTED");
+	public GfWebServiceResultAbstrtree abstrtree(String tree) throws GfServiceException {
+		byte[] response = getDiagram(tree, Command.ABSTRTREE);
+		return new GfWebServiceResultAbstrtree(response);
 	}
 
 
-	public GfServiceResultParsetree parsetree(String tree, String from) {
-		throw new RuntimeException("NOT IMPLEMENTED");
+	public GfWebServiceResultParsetree parsetree(String tree, String from) throws GfServiceException {
+		if (tree == null) {
+			throw new IllegalArgumentException("Tree MUST be given");
+		}
+		if (from == null) {
+			throw new IllegalArgumentException("Source language MUST be given");
+		}
+		Params p = new Params(Command.PARSETREE);
+		p.add(Param.TREE, tree);
+		p.add(Param.FROM, from);
+		return new GfWebServiceResultParsetree(getResponseAsBytes(p.get()));
 	}
 
 
 	public GfWebServiceResultAlignment alignment(String tree) throws GfServiceException {
-		if (tree == null) {
-			throw new IllegalArgumentException("Tree MUST be given");
-		}
-		Params p = new Params(Command.ALIGNMENT);
-		p.add(Param.TREE, tree);
-		byte[] response = getResponseAsBytes(p.get());
+		byte[] response = getDiagram(tree, Command.ALIGNMENT);
 		return new GfWebServiceResultAlignment(response);
 	}
 
@@ -234,7 +237,7 @@ public class GfWebService implements GfService {
 
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode != HttpStatus.SC_OK) {
-			throw new GfServiceException(response.getStatusLine().getReasonPhrase());
+			throw new GfServiceException(response.getStatusLine().toString());
 		}
 
 		HttpEntity entity = response.getEntity();
@@ -243,5 +246,15 @@ public class GfWebService implements GfService {
 		}
 
 		return entity;
+	}
+
+
+	private byte[] getDiagram(String tree, Command command) throws GfServiceException {
+		if (tree == null) {
+			throw new IllegalArgumentException("Tree MUST be given");
+		}
+		Params p = new Params(command);
+		p.add(Param.TREE, tree);
+		return getResponseAsBytes(p.get());
 	}
 }

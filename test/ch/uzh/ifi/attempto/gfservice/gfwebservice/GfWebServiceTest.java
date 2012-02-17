@@ -16,11 +16,13 @@ import org.junit.Test;
 
 import ch.uzh.ifi.attempto.gfservice.GfService;
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
+import ch.uzh.ifi.attempto.gfservice.GfServiceResultAbstrtree;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultAlignment;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultComplete;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultGrammar;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultLinearize;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultParse;
+import ch.uzh.ifi.attempto.gfservice.GfServiceResultParsetree;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultRandom;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultTranslate;
 import ch.uzh.ifi.attempto.gfservice.gfwebservice.GfWebService;
@@ -31,6 +33,7 @@ public class GfWebServiceTest {
 	private static final String MSGY_ILLEGAL_ARGUMENT_EXCEPTION = "should throw IllegalArgumentException";
 	private static final String MSG_URI_SYNTAX_EXCEPTION = "should NOT throw URISyntaxException";
 	private static final String MSG_GF_SERVICE_EXCEPTION = "should NOT throw GfServiceException";
+	private static final String MSGY_GF_SERVICE_EXCEPTION = "should throw GfServiceException";
 
 	private static final GfService GF_SERVICE;
 	private static final String GRAMMAR = "grammars/Go.pgf";
@@ -227,12 +230,51 @@ public class GfWebServiceTest {
 
 
 	@Test
+	public void testAbstrtree() {
+		try {
+			GfServiceResultAbstrtree result = GF_SERVICE.abstrtree(T_LINEARIZE_1_TREE);
+			//System.out.println("<img src=\"" + result.getDataUri() + "\">");
+			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
+					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
+		} catch (GfServiceException e) {
+			fail(MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testAbstrtree1() {
+		try {
+			GfServiceResultAbstrtree result = GF_SERVICE.abstrtree(UNPARSABLE_STRING);
+			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
+					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
+			fail(MSGY_GF_SERVICE_EXCEPTION);
+		} catch (GfServiceException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+
+	@Test
+	public void testParsetree() {
+		try {
+			GfServiceResultParsetree result = GF_SERVICE.parsetree(T_LINEARIZE_1_TREE, FROM);
+			//System.out.println("<img src=\"" + result.getDataUri() + "\">");
+			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
+					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
+		} catch (GfServiceException e) {
+			fail(MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
 	public void testAlignment() {
 		try {
 			GfServiceResultAlignment result = GF_SERVICE.alignment(T_LINEARIZE_1_TREE);
-			//System.out.println("<img src=\"" + result.getAlignmentAsDataUri() + "\">");
+			//System.out.println("<img src=\"" + result.getDataUri() + "\">");
 			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
-					result.getAlignmentAsDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
+					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
 		} catch (GfServiceException e) {
 			fail(MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}

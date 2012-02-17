@@ -8,7 +8,6 @@ Status
 
   - Interface definitions almost complete.
   - GF Webservice wrapper covers the main webservice functionality.
-  - PNG outputs are not supported
 
 
 Backends
@@ -60,7 +59,7 @@ Testing
 
 Start the GF server:
 
-> $ gf -server
+> gf -server
 
 	This is GF version 3.3.
 	Built on linux/x86_64 with ghc-6.12, flags: interrupt server cclazy
@@ -70,9 +69,9 @@ Start the GF server:
 Make sure that the PGF files used in testing (e.g. `Go.pgf`) are included in the
 server directory, missing grammar file would cause _500 Internal Server Error_.
 
-> $ cp grammars/Go.pgf /home/kaarel/.cabal/share/gf-3.3/www/grammars/
+> cp grammars/Go.pgf /home/kaarel/.cabal/share/gf-3.3/www/grammars/
 
-> $ ls /home/kaarel/.cabal/share/gf-3.3/www/grammars/ | grep Go
+> ls /home/kaarel/.cabal/share/gf-3.3/www/grammars/ | grep Go
 
 	Go.pgf
 

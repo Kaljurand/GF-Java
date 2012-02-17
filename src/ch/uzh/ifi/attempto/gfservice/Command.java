@@ -7,5 +7,7 @@ public enum Command {
 	TRANSLATE,
 	RANDOM,
 	COMPLETE,
+	ABSTRTREE,
+	PARSETREE,
 	ALIGNMENT;
 }
