@@ -28,14 +28,12 @@ import ch.uzh.ifi.attempto.gfservice.GfServiceResultParsetree;
 import ch.uzh.ifi.attempto.gfservice.Param;
 
 /**
- * TODO: rethink the RuntimeExceptions
- *
  * @author Kaarel Kaljurand
  */
 public class GfWebService implements GfService {
 
 	private static final int MAX_HTTP_GET_LENGTH = 1000;
-	private static final String ERROR_MESSAGE = "Accessing the webservice failed";
+	private static final String ERROR_MESSAGE_ENTITY_NULL = "Response entity is null";
 
 	private final URI mUri;
 	private String mGrammar;
@@ -161,14 +159,14 @@ public class GfWebService implements GfService {
 	}
 
 
-	private String getResponseAsString(List<NameValuePair> nvps) {
+	private String getResponseAsString(List<NameValuePair> nvps) throws GfServiceException {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpUriRequest request = getHttpUriRequest(nvps);
 		return getHttpEntityAsString(httpClient, request);
 	}
 
 
-	private byte[] getResponseAsBytes(List<NameValuePair> nvps) {
+	private byte[] getResponseAsBytes(List<NameValuePair> nvps) throws GfServiceException {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpUriRequest request = getHttpUriRequest(nvps);
 		return getHttpEntityAsByteArray(httpClient, request);
@@ -198,7 +196,7 @@ public class GfWebService implements GfService {
 	}
 
 
-	private static String getHttpEntityAsString(DefaultHttpClient httpClient, HttpUriRequest httpRequest) {
+	private static String getHttpEntityAsString(DefaultHttpClient httpClient, HttpUriRequest httpRequest) throws GfServiceException {
 		try {
 			HttpEntity entity = getHttpEntity(httpClient, httpRequest);
 			// Assuming that the webservice returns data in UTF8,
@@ -208,38 +206,42 @@ public class GfWebService implements GfService {
 			}
 			return EntityUtils.toString(entity);
 		} catch (ClientProtocolException e) {
-			throw new RuntimeException(ERROR_MESSAGE + ": " + e.getMessage());
+			throw new GfServiceException(e);
 		} catch (IOException e) {
-			throw new RuntimeException(ERROR_MESSAGE + ": " + e.getMessage());
+			throw new GfServiceException(e);
 		} finally {
 			httpClient.getConnectionManager().shutdown();
 		}
 	}
 
 
-	private static byte[] getHttpEntityAsByteArray(DefaultHttpClient httpClient, HttpUriRequest httpRequest) {
+	private static byte[] getHttpEntityAsByteArray(DefaultHttpClient httpClient, HttpUriRequest httpRequest) throws GfServiceException {
 		try {
 			return EntityUtils.toByteArray(getHttpEntity(httpClient, httpRequest));
 		} catch (ClientProtocolException e) {
-			throw new RuntimeException(ERROR_MESSAGE + ": " + e.getMessage());
+			throw new GfServiceException(e);
 		} catch (IOException e) {
-			throw new RuntimeException(ERROR_MESSAGE + ": " + e.getMessage());
+			throw new GfServiceException(e);
 		} finally {
 			httpClient.getConnectionManager().shutdown();
 		}
 	}
 
 
-	private static HttpEntity getHttpEntity(DefaultHttpClient httpclient, HttpUriRequest httpRequest) throws ClientProtocolException, IOException {
+	private static HttpEntity getHttpEntity(DefaultHttpClient httpclient, HttpUriRequest httpRequest)
+			throws ClientProtocolException, IOException, GfServiceException {
 		HttpResponse response = httpclient.execute(httpRequest);
-		HttpEntity entity = response.getEntity();
-		if (entity == null) {
-			throw new RuntimeException(ERROR_MESSAGE + ": " + response.getStatusLine());
-		}
+
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode != HttpStatus.SC_OK) {
-			throw new RuntimeException(ERROR_MESSAGE + ": " + response.getStatusLine());
+			throw new GfServiceException(response.getStatusLine().getReasonPhrase());
 		}
+
+		HttpEntity entity = response.getEntity();
+		if (entity == null) {
+			throw new GfServiceException(ERROR_MESSAGE_ENTITY_NULL);
+		}
+
 		return entity;
 	}
 }
