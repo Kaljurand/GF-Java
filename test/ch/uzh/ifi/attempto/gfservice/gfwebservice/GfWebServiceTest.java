@@ -42,6 +42,10 @@ public class GfWebServiceTest {
 	private static final String STARTCAT = NAME;
 	private static final String FROM = "GoEng";
 	private static final String TO = "GoApp";
+	private static final Set<String> CATEGORIES = new HashSet<String>(Arrays.asList(new String[] {
+			"Float", "String", "Number", "Go", "Int", "Unit", "Direction" }));
+	private static final Set<String> FUNCTIONS = new HashSet<String>(Arrays.asList(new String[] {
+			"n1", "n2", "n3", "n4", "n5", "go", "meter", "forward", "back" }));
 	private static final Set<String> LANGUAGES = new HashSet<String>(Arrays.asList(new String[] { "GoEst", "GoApp", "GoEng" }));
 	private static URI URI = null;
 
@@ -55,8 +59,6 @@ public class GfWebServiceTest {
 	private static final Set<String> T_LINEARIZE_1_OUT_TEXTS = new HashSet<String>(Arrays.asList(new String[] { "3" }));
 
 	private static final Map<String, Set<String>> T_LINEARIZE_2_OUT = new HashMap<String, Set<String>>();
-
-	private static final List<String> T_RANDOM_1_OUT = Arrays.asList(new String[] { "it does not", "matter" });
 
 	private static final String T_COMPLETE_0_INPUT = "go t";
 	private static final Set<String> T_COMPLETE_0_OUT_COMPLETIONS = new HashSet<String>(Arrays.asList(new String[] { "three", "two" }));
@@ -89,6 +91,8 @@ public class GfWebServiceTest {
 		try {
 			GfServiceResultGrammar result = GF_SERVICE.grammar();
 			assertEquals(NAME, result.getName());
+			assertEquals(CATEGORIES, result.getCategories());
+			assertEquals(FUNCTIONS, result.getFunctions());
 			assertEquals(STARTCAT, result.getStartcat());
 			assertEquals(LANGUAGES, result.getLanguages().keySet());
 		} catch (GfServiceException e) {
@@ -184,10 +188,10 @@ public class GfWebServiceTest {
 	@Test
 	public void testRandom() {
 		try {
-			GfServiceResultRandom result = GF_SERVICE.random(null, T_RANDOM_1_OUT.size());
+			GfServiceResultRandom result = GF_SERVICE.random(null, null);
 			// We just check if the number of returned trees matches the number
-			// of requested trees.
-			assertEquals(T_RANDOM_1_OUT.size(), result.getTrees().size());
+			// of requested trees. We request the default numbers of trees (i.e. 1).
+			assertEquals(1, result.getTrees().size());
 		} catch (GfServiceException e) {
 			fail(MSG_GF_SERVICE_EXCEPTION);
 		}

@@ -105,7 +105,7 @@ public class GfWebService implements GfService {
 		}
 	}
 
-	public GfWebServiceResultRandom random(String cat, int limit) throws GfServiceException {
+	public GfWebServiceResultRandom random(String cat, Integer limit) throws GfServiceException {
 		Params p = new Params(Command.RANDOM);
 		p.add(Param.CAT, cat);
 		p.add(Param.LIMIT, limit);
@@ -119,7 +119,7 @@ public class GfWebService implements GfService {
 		}
 	}
 
-	public GfWebServiceResultComplete complete(String cat, String input, String from, int limit) throws GfServiceException {
+	public GfWebServiceResultComplete complete(String cat, String input, String from, Integer limit) throws GfServiceException {
 		Params p = new Params(Command.COMPLETE);
 		p.add(Param.CAT, cat);
 		p.add(Param.INPUT, input);

@@ -18,14 +18,12 @@ import ch.uzh.ifi.attempto.gfservice.GfServiceResultGrammar;
  */
 public class GfWebServiceResultGrammar implements GfServiceResultGrammar {
 
-	public static final String USER_LANGUAGE = "userLanguage";
 	public static final String FUNCTIONS = "functions";
 	public static final String LANGUAGES = "languages";
 	public static final String STARTCAT = "startcat";
 	public static final String NAME = "name";
 	public static final String CATEGORIES = "categories";
 
-	private final String mUserLanguage;
 	private final Set<String> mFunctions;
 	private final Map<String, Set<String>> mLanguages;
 	private final String mStartcat;
@@ -36,16 +34,11 @@ public class GfWebServiceResultGrammar implements GfServiceResultGrammar {
 
 		JSONObject jo = (JSONObject) JSONValue.parseWithException(jsonAsStr);
 
-		mUserLanguage = jo.get(USER_LANGUAGE).toString();
 		mFunctions = JsonUtils.makeStringSetFromJsonArray((JSONArray) jo.get(FUNCTIONS));
 		mLanguages = JsonUtils.makeMultimapSetFromJsonArray((JSONArray) jo.get(LANGUAGES), "name", "languageCode");
 		mStartcat = jo.get(STARTCAT).toString();
 		mName = jo.get(NAME).toString();
 		mCategories = JsonUtils.makeStringSetFromJsonArray((JSONArray) jo.get(CATEGORIES));
-	}
-
-	public String getUserLanguage() {
-		return mUserLanguage;
 	}
 
 	public Set<String> getFunctions() {

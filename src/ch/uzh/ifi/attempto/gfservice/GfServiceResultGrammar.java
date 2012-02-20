@@ -5,13 +5,6 @@ import java.util.Set;
 
 public interface GfServiceResultGrammar extends GfResult {
 
-
-	/**
-	 * TODO: is this really needed?
-	 */
-	String getUserLanguage();
-
-
 	/**
 	 * @return set of function names
 	 */

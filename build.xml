@@ -2,7 +2,7 @@
 
 <project name="GF Java" default="buildeverything" basedir=".">
 
-    <property name="version" value="20120203"/>
+    <property name="version" value="20120220"/>
     <property name="libs" value="lib/commons-codec-1.6.jar;lib/json_simple-1.1.jar;lib/httpcore-4.1.1.jar;lib/httpclient-4.1.1.jar;lib/commons-lang-2.2.jar;lib/commons-logging-1.1.jar"/>
     <property name="jar" value="gf-java.jar"/>
     <property name="classes" location="bin/"/>
@@ -43,7 +43,7 @@
              doctitle="GF Java, version ${version}"
              overview="src/overview.html"
              linksource="on">
-            <bottom><![CDATA[<em>Copyright 2008-2012, Attempto Group, University of Zurich (see <a href="http://attempto.ifi.uzh.ch" target="_blank">http://attempto.ifi.uzh.ch</a>)</em>]]></bottom>
+            <bottom><![CDATA[<em>Copyright 2012, Attempto Group, University of Zurich (see <a href="http://attempto.ifi.uzh.ch" target="_blank">http://attempto.ifi.uzh.ch</a>)</em>]]></bottom>
         </javadoc>
     </target>
 

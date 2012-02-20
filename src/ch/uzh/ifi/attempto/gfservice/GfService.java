@@ -9,13 +9,14 @@ package ch.uzh.ifi.attempto.gfservice;
  * 
  * <p>All the methods expect that the name of the grammar is already specified (in the constructor).</p>
  *
- * @author Kaarel Kaljurand
+ * <p>Setting a parameter to <code>null</code> results in the default value being used.</p>
  *
+ * @author Kaarel Kaljurand
  */
 public interface GfService {
 
 	/**
-	 * <p>Provides some information about the given grammar.</p>
+	 * <p>Provides some information about the grammar.</p>
 	 *
 	 * @return GfServiceResultGrammar
 	 * @throws GfServiceException
@@ -26,9 +27,9 @@ public interface GfService {
 	/**
 	 * <p>Parses the given string into a list of abstract syntax trees.</p>
 	 *
-	 * @param cat
-	 * @param input
-	 * @param from
+	 * @param cat start category for the parser (defaults to: the default start category)
+	 * @param input string to be parsed (defaults to: empty string)
+	 * @param from language of the string (defaults to: all languages will be tried by the parser)
 	 * @return GfServiceResultParse
 	 * @throws GfServiceException
 	 */
@@ -38,8 +39,8 @@ public interface GfService {
 	/**
 	 * <p>Linearizes the given abstract syntax tree into strings in the given language(s).</p>
 	 *
-	 * @param tree
-	 * @param to
+	 * @param tree abstract tree to be linearized
+	 * @param to linearization language (defaults to: linearizes into all the languages of the grammar)
 	 * @return GfServiceResultLinearize
 	 * @throws GfServiceException
 	 */
@@ -55,10 +56,10 @@ public interface GfService {
 	 * For that reason the input and the output for this command is the union
 	 * of the input/output of the commands for parsing and the one for linearization.</p>
 	 *
-	 * @param cat
-	 * @param input
-	 * @param from
-	 * @param to
+	 * @param cat start category for the parser (defaults to: the default start category)
+	 * @param input string to be parsed (defaults to: empty string)
+	 * @param from language of the string (defaults to: all languages will be tried by the parser)
+	 * @param to linearization language (defaults to: linearizes into all the languages of the grammar)
 	 * @return GfServiceResultTranslate
 	 * @throws GfServiceException
 	 */
@@ -69,30 +70,31 @@ public interface GfService {
 	 * <p>Generates the given number of abstract trees randomly.
 	 * The generated trees are not necessarily different.</p>
 	 *
-	 * @param cat the start category for the parser
-	 * @param limit number of trees to be generated
+	 * @param cat start category for the parser (defaults to: the default start category)
+	 * @param limit number of trees to be generated (defaults to: 1)
 	 * @return GfServiceResultRandom
 	 * @throws GfServiceException
 	 */
-	GfServiceResultRandom random(String cat, int limit) throws GfServiceException;
+	GfServiceResultRandom random(String cat, Integer limit) throws GfServiceException;
 
 
 	/**
 	 * <p>Completes the last part of the given string.</p>
 	 *
-	 * @param cat the start category for the parser
-	 * @param input the incomplete string the last token of which is to be completed
+	 * @param cat start category for the parser (defaults to: the default start category)
+	 * @param input incomplete string the last token of which is to be completed
 	 * @param from language to use for parsing
-	 * @param limit maximal number of trees generated
+	 * @param limit maximal number of trees generated (defaults to: all)
 	 * @return GfServiceResultComplete
 	 * @throws GfServiceException
 	 */
-	GfServiceResultComplete complete(String cat, String input, String from, int limit) throws GfServiceException;
+	GfServiceResultComplete complete(String cat, String input, String from, Integer limit) throws GfServiceException;
 
 
 	/**
+	 * <p>Returns the abstract tree diagram.</p>
 	 *
-	 * @param tree
+	 * @param tree abstract syntax tree to be rendered
 	 * @return GfServiceResultAbstrtree
 	 * @throws GfServiceException
 	 */
@@ -100,9 +102,10 @@ public interface GfService {
 
 
 	/**
+	 * <p>Returns the parse tree diagram.</p>
 	 *
-	 * @param tree
-	 * @param from
+	 * @param tree abstract syntax tree to be rendered
+	 * @param from language to be used in the rendering
 	 * @return GfServiceResultParsetree
 	 * @throws GfServiceException
 	 */
@@ -110,8 +113,9 @@ public interface GfService {
 
 
 	/**
+	 * <p>Returns the word alignment diagram.</p>
 	 *
-	 * @param tree
+	 * @param tree abstract syntax tree to be rendered
 	 * @return GfServiceResultAlignment
 	 * @throws GfServiceException
 	 */

@@ -21,29 +21,15 @@ public class Params {
 
 	/**
 	 * <p>Adds a key-value pair.</p>
-	 * <p>Passing a negative integer as value will not add a new pair.</p>
-	 *
-	 * @param key webservice query key
-	 * @param value webservice query value
-	 */
-	public void add(Param key, int value) {
-		if (value >= 0) {
-			add(key, Integer.toString(value));
-		}
-	}
-
-
-	/**
-	 * <p>Adds a key-value pair.</p>
 	 * <p>Passing <code>null</code> as value will not add a new pair.</p>
 	 *
 	 * @param key webservice query key
 	 * @param value webservice query value
 	 */
-	public void add(Param key, String value) {
+	public void add(Param key, Object value) {
 		if (value != null) {
 			String keyAsStr = key.toString().toLowerCase();
-			pairs.add(new BasicNameValuePair(keyAsStr, value));
+			pairs.add(new BasicNameValuePair(keyAsStr, value.toString()));
 		}
 	}
 
