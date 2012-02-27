@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -159,6 +158,17 @@ public class GfWebServiceTest {
 
 
 	@Test
+	public void testLinearize3() {
+		try {
+			GF_SERVICE.linearize(UNPARSABLE_STRING, null);
+			fail(MSGY_GF_SERVICE_EXCEPTION);
+		} catch (GfServiceException e) {
+			assertEquals("-", e.getMessage());
+		}
+	}
+
+
+	@Test
 	public void testTranslate() {
 		try {
 			GfServiceResultTranslate result = GF_SERVICE.translate(T_TRANSLATE_1_CAT, T_TRANSLATE_1_INPUT, FROM, TO);
@@ -254,7 +264,7 @@ public class GfWebServiceTest {
 					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
 			fail(MSGY_GF_SERVICE_EXCEPTION);
 		} catch (GfServiceException e) {
-			System.out.println(e.getMessage());
+			assertEquals("-", e.getMessage());
 		}
 	}
 

@@ -231,13 +231,32 @@ public class GfWebService implements GfService {
 	}
 
 
+	/**
+	 * <p>Executes the given request and returns the response entity.</p>
+	 *
+	 * <p>In case of an HTTP error we turn the <code>Reason-Phrase</code>
+	 * of the <code>Status-Line</code> into an exception message.</p>
+	 *
+	 * <pre>
+	 * Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
+	 * </pre>
+	 *
+	 * TODO: the server currently does not set a meaningful Reason-Phrase
+	 *
+	 * @param httpclient HTTP client
+	 * @param httpRequest HTTP request
+	 * @return response entity
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws GfServiceException
+	 */
 	private static HttpEntity getHttpEntity(DefaultHttpClient httpclient, HttpUriRequest httpRequest)
 			throws ClientProtocolException, IOException, GfServiceException {
 		HttpResponse response = httpclient.execute(httpRequest);
 
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode != HttpStatus.SC_OK) {
-			throw new GfServiceException(response.getStatusLine().toString());
+			throw new GfServiceException(response.getStatusLine().getReasonPhrase());
 		}
 
 		HttpEntity entity = response.getEntity();
