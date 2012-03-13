@@ -57,6 +57,17 @@ Clean up, create JAR files and create Javadoc:
 Testing
 -------
 
+Make sure that you are connected to the internet and run
+
+> ant test
+
+This test uses the GF webservice and a PGF from
+<http://cloud.grammaticalframework.org>.
+
+
+Testing using a local GF webservice
+-----------------------------------
+
 Start the GF server:
 
 > gf -server
@@ -74,6 +85,8 @@ server directory, missing grammar file would cause _500 Internal Server Error_.
 > ls /home/kaarel/.cabal/share/gf-3.3/www/grammars/ | grep Go
 
 	Go.pgf
+
+Edit the `GfWebServiceTest.java` source to change `CLOUD` to `LOCALHOST` where needed.
 
 Run the tests
 

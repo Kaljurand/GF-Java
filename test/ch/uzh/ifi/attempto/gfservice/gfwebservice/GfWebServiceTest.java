@@ -35,8 +35,11 @@ public class GfWebServiceTest {
 	private static final String MSGY_GF_SERVICE_EXCEPTION = "should throw GfServiceException";
 
 	private static final GfService GF_SERVICE;
-	private static final String GRAMMAR = "grammars/Go.pgf";
-	private static final String URL_AS_STRING = "http://localhost:41296/";
+	private static final String WS_URL_LOCALHOST = "http://localhost:41296";
+	private static final String WS_URL_CLOUD = "http://cloud.grammaticalframework.org";
+	private static final String GRAMMAR_DIR_CLOUD = "/tmp/gfse.74044909/";
+	private static final String GRAMMAR_DIR_LOCALHOST = "/grammars/";
+	private static final String GRAMMAR_PGF = "Go.pgf";
 	private static final String NAME = "Go";
 	private static final String STARTCAT = NAME;
 	private static final String FROM = "GoEng";
@@ -70,14 +73,15 @@ public class GfWebServiceTest {
 
 	private static final String T_ALIGNMENT_0_OUT_DATAURI_PREFIX = "data:image/png;base64,";
 
+	// Change _CLOUD -> _LOCALHOST to test against the GF webservice running on localhost
 	static {
 		try {
-			URI = new URI(URL_AS_STRING);
+			URI = new URI(WS_URL_CLOUD);
 		} catch (URISyntaxException e) {
 			fail(MSG_URI_SYNTAX_EXCEPTION);
 		}
 
-		GF_SERVICE = new GfWebService(URI, GRAMMAR);
+		GF_SERVICE = new GfWebService(URI, GRAMMAR_DIR_CLOUD + GRAMMAR_PGF);
 
 		T_LINEARIZE_2_OUT.put("GoEst", new HashSet<String>(Arrays.asList(new String[] { "kolm" })));
 		T_LINEARIZE_2_OUT.put("GoEng", new HashSet<String>(Arrays.asList(new String[] { "three" })));
