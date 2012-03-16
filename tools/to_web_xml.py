@@ -3,7 +3,7 @@
 # Formats the output of info.py as web.xml servlet declarations.
 
 # Author: Kaarel Kaljurand
-# Version: 2012-03-14
+# Version: 2012-03-16
 #
 # Examples:
 #
@@ -16,7 +16,7 @@ import os
 import re
 from string import Template
 
-template_backend = Template("""
+template_grammar = Template("""
   <servlet>
     <servlet-name>${servlet_name}</servlet-name>
     <servlet-class>ch.uzh.ifi.attempto.acewiki.BackendServlet</servlet-class>
@@ -27,7 +27,7 @@ template_backend = Template("""
     </init-param>
     <init-param>
       <param-name>pgf_name</param-name>
-      <param-value>${server_dir}${pgf_name}</param-value>
+      <param-value>${pgf_name}</param-value>
     </init-param>
     <init-param>
       <param-name>service_uri</param-name>
@@ -40,12 +40,12 @@ template_backend = Template("""
   </servlet>
   <servlet-mapping>
     <servlet-name>${servlet_name}</servlet-name>
-    <url-pattern>/backend/${servlet_name}</url-pattern>
+    <url-pattern>${servlet_name}</url-pattern>
   </servlet-mapping>
 """)
 
 
-template_wiki = Template("""
+template_language = Template("""
   <servlet>
     <servlet-name>${servlet_name}</servlet-name>
     <servlet-class>ch.uzh.ifi.attempto.acewiki.AceWikiServlet</servlet-class>
@@ -64,43 +64,52 @@ template_wiki = Template("""
   </servlet>
   <servlet-mapping>
     <servlet-name>${servlet_name}</servlet-name>
-    <url-pattern>/${backend}/${servlet_name}/</url-pattern>
+    <url-pattern>${backend}/${servlet_name}/</url-pattern>
   </servlet-mapping>
 """)
-
 
 
 def format(server, server_dir):
 	"""
 	"""
 	pattern_lang = re.compile('^\s+(.+)$')
-	backend = None
+	grammar = None
+	langs = []
 	for line in sys.stdin:
 		line = line.rstrip()
 		m = pattern_lang.match(line)
-		if m is not None:
-			format_wiki(backend, m.group(1))
+		if m is None:
+			format_grammar(server, server_dir, grammar, langs)
+			grammar = line
+			langs = []
 		else:
-			backend = line
-			format_backend(line, server, server_dir)
+			langs.append(m.group(1))
+	format_grammar(server, server_dir, grammar, langs)
 
 
-def format_backend(line, server, server_dir):
-	print template_backend.substitute(
-		servlet_name = line,
-		pgf_name = line,
+def format_grammar(server, server_dir, grammar, langs):
+	if grammar is None or len(langs) == 0:
+		return
+	ontology = re.sub(r'\.pgf$', r'', grammar)
+	ontology = re.sub(r'^/', r'', ontology)
+	ontology = re.sub(r'/', r'__', ontology)
+	print template_grammar.substitute(
+		servlet_name = grammar,
+		pgf_name = grammar,
 		server = server,
 		server_dir = server_dir,
-		ontology = line
+		ontology = ontology
 	)
+	for l in langs:
+		format_language(grammar, l)
 
 
-def format_wiki(backend, lang):
-	print template_wiki.substitute(
-		servlet_name = lang,
-		backend = backend,
-		language = lang,
-		title = 'Wiki in ' + lang
+def format_language(grammar, language):
+	print template_language.substitute(
+		servlet_name = language,
+		backend = grammar,
+		language = language,
+		title = 'Wiki in ' + language
 	)
 
 

@@ -4,7 +4,7 @@
 # Main structure: for each grammar its name and the names of each concrete language.
 
 # Author: Kaarel Kaljurand
-# Version: 2012-03-14
+# Version: 2012-03-16
 #
 # Examples:
 #
@@ -26,15 +26,16 @@ def get_grammars(query):
 	try:
 		return json.loads(urllib2.urlopen(urllib2.Request(query)).read())
 	except:
-		print >> sys.stderr, sys.exc_info()[0]
+		print >> sys.stderr, "ERROR: Failed to get grammars, is the GF server running?"
+		sys.exit()
 
 
-def process_grammars(server_url, grammars):
+def process_grammars(server_url, server_dir, grammars):
 	"""
 	"""
 	for g in grammars:
-		print '{:}'.format(g)
-		req = urllib2.Request(server_url + g)
+		print '{:}{:}'.format(server_dir, g)
+		req = urllib2.Request(server_url + server_dir + g)
 		try:
 			res = urllib2.urlopen(req)
 			jsonAsStr = res.read()
@@ -75,7 +76,7 @@ parser.add_argument('-v', '--version', action='version', version='%(prog)s v0.1'
 
 args = parser.parse_args()
 
-server_url=args.server_name + ":" + str(args.server_port) + args.server_dir
+server_url = args.server_name + ":" + str(args.server_port)
 
-query = server_url + "grammars.cgi"
-process_grammars(server_url, get_grammars(query))
+query = server_url + args.server_dir + "grammars.cgi"
+process_grammars(server_url, args.server_dir, get_grammars(query))
