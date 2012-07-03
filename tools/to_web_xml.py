@@ -47,7 +47,7 @@ template_grammar = Template("""
 
 template_language = Template("""
   <servlet>
-    <servlet-name>${servlet_name}</servlet-name>
+    <servlet-name>${backend}/${servlet_name}</servlet-name>
     <servlet-class>ch.uzh.ifi.attempto.acewiki.AceWikiServlet</servlet-class>
     <init-param>
       <param-name>backend</param-name>
@@ -63,7 +63,7 @@ template_language = Template("""
     </init-param>
   </servlet>
   <servlet-mapping>
-    <servlet-name>${servlet_name}</servlet-name>
+    <servlet-name>${backend}/${servlet_name}</servlet-name>
     <url-pattern>${backend}/${servlet_name}/</url-pattern>
   </servlet-mapping>
 """)
