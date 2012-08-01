@@ -27,18 +27,6 @@ the GF webservice running on localhost.
 	$ echo "go five meters back" | python pgf.py -g Go -f GoEng
 
 
-to_html.py
-----------
-
-Formats the output of `info.py` as HTML with links to AceWiki.
-
-
-to_web_xml.py
--------------
-
-Formats the output of `info.py` as `web.xml` servlet declarations.
-
-
 test_gfws.sh
 ------------
 
