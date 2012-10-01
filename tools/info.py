@@ -43,6 +43,7 @@ def process_grammars(server_url, server_dir, grammars):
 			for l in get_languages(data):
 				print '\t{:}'.format(l)
 		except:
+			print >> sys.stderr, "ERROR: Failed to read grammar: " + g
 			print >> sys.stderr, sys.exc_info()[0]
 
 

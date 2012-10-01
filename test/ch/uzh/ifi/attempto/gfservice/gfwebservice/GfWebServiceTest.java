@@ -127,6 +127,17 @@ public class GfWebServiceTest {
 
 
 	@Test
+	public void testParse2() {
+		try {
+			GfServiceResultParse result = GF_SERVICE.parse(T_PARSE_0_CAT, T_PARSE_0_INPUT, FROM, 0);
+			assertEquals(Collections.EMPTY_SET, result.getTrees(FROM));
+		} catch (GfServiceException e) {
+			fail(MSG_GF_SERVICE_EXCEPTION);
+		}
+	}
+
+
+	@Test
 	public void testLinearize() {
 		try {
 			GfServiceResultLinearize result = GF_SERVICE.linearize(T_LINEARIZE_1_TREE, TO);

@@ -30,10 +30,12 @@ public interface GfService {
 	 * @param cat start category for the parser (defaults to: the default start category)
 	 * @param input string to be parsed (defaults to: empty string)
 	 * @param from language of the string (defaults to: all languages will be tried by the parser)
+	 * @param limit max number of trees returned (defaults to: no limit)
 	 * @return GfServiceResultParse
 	 * @throws GfServiceException
 	 */
 	GfServiceResultParse parse(String cat, String input, String from) throws GfServiceException;
+	GfServiceResultParse parse(String cat, String input, String from, Integer limit) throws GfServiceException;
 
 
 	/**
@@ -60,10 +62,12 @@ public interface GfService {
 	 * @param input string to be parsed (defaults to: empty string)
 	 * @param from language of the string (defaults to: all languages will be tried by the parser)
 	 * @param to linearization language (defaults to: linearizes into all the languages of the grammar)
+	 * @param limit max number of trees used (defaults to: no limit)
 	 * @return GfServiceResultTranslate
 	 * @throws GfServiceException
 	 */
 	GfServiceResultTranslate translate(String cat, String input, String from, String to) throws GfServiceException;
+	GfServiceResultTranslate translate(String cat, String input, String from, String to, Integer limit) throws GfServiceException;
 
 
 	/**

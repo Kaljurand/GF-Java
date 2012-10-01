@@ -56,10 +56,16 @@ public class GfWebService implements GfService {
 
 
 	public GfWebServiceResultParse parse(String cat, String input, String from) throws GfServiceException {
+		return parse(cat, input, from, null);
+	}
+
+
+	public GfWebServiceResultParse parse(String cat, String input, String from, Integer limit) throws GfServiceException {
 		Params p = new Params(Command.PARSE);
 		p.add(Param.CAT, cat);
 		p.add(Param.INPUT, input);
 		p.add(Param.FROM, from);
+		p.add(Param.LIMIT, limit);
 		String response = getResponseAsString(p.get());
 		try {
 			return new GfWebServiceResultParse(response);
@@ -90,11 +96,17 @@ public class GfWebService implements GfService {
 
 
 	public GfWebServiceResultTranslate translate(String cat, String input, String from, String to) throws GfServiceException {
+		return translate(cat, input, from, to, null);
+	}
+
+
+	public GfWebServiceResultTranslate translate(String cat, String input, String from, String to, Integer limit) throws GfServiceException {
 		Params p = new Params(Command.TRANSLATE);
 		p.add(Param.CAT, cat);
 		p.add(Param.INPUT, input);
 		p.add(Param.FROM, from);
 		p.add(Param.TO, to);
+		p.add(Param.LIMIT, limit);
 		String response = getResponseAsString(p.get());
 		try {
 			return new GfWebServiceResultTranslate(response);
