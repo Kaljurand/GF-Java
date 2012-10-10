@@ -23,12 +23,13 @@ import org.json.simple.parser.ParseException;
 import ch.uzh.ifi.attempto.gfservice.Command;
 import ch.uzh.ifi.attempto.gfservice.GfService;
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
+import ch.uzh.ifi.attempto.gfservice.GfStorage;
 import ch.uzh.ifi.attempto.gfservice.Param;
 
 /**
  * @author Kaarel Kaljurand
  */
-public class GfWebService implements GfService {
+public class GfWebService implements GfService, GfStorage {
 
 	private static final int MAX_HTTP_GET_LENGTH = 1000;
 	private static final String ERROR_MESSAGE_ENTITY_NULL = "Response entity is null";
@@ -171,6 +172,11 @@ public class GfWebService implements GfService {
 	public GfWebServiceResultAlignment alignment(String tree) throws GfServiceException {
 		byte[] response = getDiagram(tree, Command.ALIGNMENT);
 		return new GfWebServiceResultAlignment(response);
+	}
+
+
+	public String create() throws GfServiceException {
+		return getHttpEntityAsString(new DefaultHttpClient(), new HttpGet(URI.create(mUri + "/new")));
 	}
 
 

@@ -34,7 +34,7 @@ public class GfWebServiceTest {
 	private static final String MSG_GF_SERVICE_EXCEPTION = "should NOT throw GfServiceException";
 	private static final String MSGY_GF_SERVICE_EXCEPTION = "should throw GfServiceException";
 
-	private static final GfService GF_SERVICE;
+	private static final GfWebService GF_SERVICE;
 	private static final String WS_URL_LOCALHOST = "http://localhost:41296";
 	private static final String WS_URL_CLOUD = "http://cloud.grammaticalframework.org";
 	private static final String GRAMMAR_DIR_CLOUD = "/tmp/gfse.74044909/";
@@ -76,12 +76,12 @@ public class GfWebServiceTest {
 	// Change _CLOUD -> _LOCALHOST to test against the GF webservice running on localhost
 	static {
 		try {
-			URI = new URI(WS_URL_CLOUD);
+			URI = new URI(WS_URL_LOCALHOST);
 		} catch (URISyntaxException e) {
 			fail(MSG_URI_SYNTAX_EXCEPTION);
 		}
 
-		GF_SERVICE = new GfWebService(URI, GRAMMAR_DIR_CLOUD + GRAMMAR_PGF);
+		GF_SERVICE = new GfWebService(URI, GRAMMAR_DIR_LOCALHOST + GRAMMAR_PGF);
 
 		T_LINEARIZE_2_OUT.put("GoEst", new HashSet<String>(Arrays.asList(new String[] { "kolm" })));
 		T_LINEARIZE_2_OUT.put("GoEng", new HashSet<String>(Arrays.asList(new String[] { "three" })));
@@ -304,6 +304,17 @@ public class GfWebServiceTest {
 			//System.out.println("<img src=\"" + result.getDataUri() + "\">");
 			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
 					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
+		} catch (GfServiceException e) {
+			fail(MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testStorageCreate() {
+		try {
+			String dirName = GF_SERVICE.create();
+			assertEquals("/tmp/", dirName.substring(0, 5));
 		} catch (GfServiceException e) {
 			fail(MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}
