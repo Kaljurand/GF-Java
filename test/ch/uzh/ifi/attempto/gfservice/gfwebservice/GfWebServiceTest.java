@@ -13,7 +13,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import ch.uzh.ifi.attempto.gfservice.GfService;
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultAbstrtree;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultAlignment;
@@ -28,11 +27,6 @@ import ch.uzh.ifi.attempto.gfservice.gfwebservice.GfWebService;
 
 
 public class GfWebServiceTest {
-
-	private static final String MSGY_ILLEGAL_ARGUMENT_EXCEPTION = "should throw IllegalArgumentException";
-	private static final String MSG_URI_SYNTAX_EXCEPTION = "should NOT throw URISyntaxException";
-	private static final String MSG_GF_SERVICE_EXCEPTION = "should NOT throw GfServiceException";
-	private static final String MSGY_GF_SERVICE_EXCEPTION = "should throw GfServiceException";
 
 	private static final GfWebService GF_SERVICE;
 	private static final String WS_URL_LOCALHOST = "http://localhost:41296";
@@ -78,7 +72,7 @@ public class GfWebServiceTest {
 		try {
 			URI = new URI(WS_URL_LOCALHOST);
 		} catch (URISyntaxException e) {
-			fail(MSG_URI_SYNTAX_EXCEPTION);
+			fail(Messages.MSG_URI_SYNTAX_EXCEPTION);
 		}
 
 		GF_SERVICE = new GfWebService(URI, GRAMMAR_DIR_LOCALHOST + GRAMMAR_PGF);
@@ -99,7 +93,7 @@ public class GfWebServiceTest {
 			assertEquals(STARTCAT, result.getStartcat());
 			assertEquals(LANGUAGES, result.getLanguages().keySet());
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION);
 		}
 	}
 
@@ -110,7 +104,7 @@ public class GfWebServiceTest {
 			GfServiceResultParse result = GF_SERVICE.parse(T_PARSE_0_CAT, T_PARSE_0_INPUT, FROM);
 			assertEquals(T_PARSE_0_OUT_TREES, result.getTrees(FROM));
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION);
 		}
 	}
 
@@ -121,7 +115,7 @@ public class GfWebServiceTest {
 			GfServiceResultParse result = GF_SERVICE.parse(T_PARSE_0_CAT, UNPARSABLE_STRING, FROM);
 			assertEquals(Collections.EMPTY_SET, result.getTrees(FROM));
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION);
 		}
 	}
 
@@ -132,7 +126,7 @@ public class GfWebServiceTest {
 			GfServiceResultParse result = GF_SERVICE.parse(T_PARSE_0_CAT, T_PARSE_0_INPUT, FROM, 0);
 			assertEquals(Collections.EMPTY_SET, result.getTrees(FROM));
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION);
 		}
 	}
 
@@ -143,7 +137,7 @@ public class GfWebServiceTest {
 			GfServiceResultLinearize result = GF_SERVICE.linearize(T_LINEARIZE_1_TREE, TO);
 			assertEquals(T_LINEARIZE_1_OUT_TEXTS, result.getTexts(TO));
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION);
 		}
 	}
 
@@ -152,11 +146,11 @@ public class GfWebServiceTest {
 	public void testLinearize1() {
 		try {
 			GF_SERVICE.linearize(null, TO);
-			fail(MSGY_ILLEGAL_ARGUMENT_EXCEPTION);
+			fail(Messages.MSGY_ILLEGAL_ARGUMENT_EXCEPTION);
 		} catch (IllegalArgumentException e) {
 			assertEquals("Tree MUST be given", e.getMessage());
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION);
 		}
 	}
 
@@ -167,7 +161,7 @@ public class GfWebServiceTest {
 			GfServiceResultLinearize result = GF_SERVICE.linearize(T_LINEARIZE_1_TREE, null);
 			assertEquals(T_LINEARIZE_2_OUT, result.getTexts());
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION);
 		}
 	}
 
@@ -176,7 +170,7 @@ public class GfWebServiceTest {
 	public void testLinearize3() {
 		try {
 			GF_SERVICE.linearize(UNPARSABLE_STRING, null);
-			fail(MSGY_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSGY_GF_SERVICE_EXCEPTION);
 		} catch (GfServiceException e) {
 			assertEquals("-", e.getMessage());
 		}
@@ -189,7 +183,7 @@ public class GfWebServiceTest {
 			GfServiceResultTranslate result = GF_SERVICE.translate(T_TRANSLATE_1_CAT, T_TRANSLATE_1_INPUT, FROM, TO);
 			assertEquals(T_TRANSLATE_1_OUT_TRANSLATIONS, result.getTranslations(FROM));
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION);
 		}
 	}
 
@@ -205,7 +199,7 @@ public class GfWebServiceTest {
 			GfServiceResultLinearize l = GF_SERVICE.linearize(p.getTrees(FROM).iterator().next(), TO);
 			assertEquals(T_TRANSLATE_1_OUT_TRANSLATIONS, l.getTexts(TO));
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION);
 		}
 	}
 
@@ -218,7 +212,7 @@ public class GfWebServiceTest {
 			// of requested trees. We request the default numbers of trees (i.e. 1).
 			assertEquals(1, result.getTrees().size());
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION);
 		}
 	}
 
@@ -229,7 +223,7 @@ public class GfWebServiceTest {
 			GfServiceResultComplete result = GF_SERVICE.complete(null, T_COMPLETE_0_INPUT, FROM, 3);
 			assertEquals(T_COMPLETE_0_OUT_COMPLETIONS, result.getCompletions(FROM));
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION);
 		}
 	}
 
@@ -245,7 +239,7 @@ public class GfWebServiceTest {
 			try {
 				result = GF_SERVICE.complete(null, input, FROM, 1);
 			} catch (GfServiceException e) {
-				fail(MSG_GF_SERVICE_EXCEPTION);
+				fail(Messages.MSG_GF_SERVICE_EXCEPTION);
 			}
 			Set<String> completions = result.getCompletions(FROM);
 			if (completions.isEmpty()) {
@@ -266,7 +260,7 @@ public class GfWebServiceTest {
 			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
 					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION + ": " + e);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}
 	}
 
@@ -277,7 +271,7 @@ public class GfWebServiceTest {
 			GfServiceResultAbstrtree result = GF_SERVICE.abstrtree(UNPARSABLE_STRING);
 			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
 					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
-			fail(MSGY_GF_SERVICE_EXCEPTION);
+			fail(Messages.MSGY_GF_SERVICE_EXCEPTION);
 		} catch (GfServiceException e) {
 			assertEquals("-", e.getMessage());
 		}
@@ -292,7 +286,7 @@ public class GfWebServiceTest {
 			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
 					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION + ": " + e);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}
 	}
 
@@ -305,18 +299,7 @@ public class GfWebServiceTest {
 			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
 					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
 		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION + ": " + e);
-		}
-	}
-
-
-	@Test
-	public void testStorageCreate() {
-		try {
-			String dirName = GF_SERVICE.create();
-			assertEquals("/tmp/", dirName.substring(0, 5));
-		} catch (GfServiceException e) {
-			fail(MSG_GF_SERVICE_EXCEPTION + ": " + e);
+			fail(Messages.MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}
 	}
 

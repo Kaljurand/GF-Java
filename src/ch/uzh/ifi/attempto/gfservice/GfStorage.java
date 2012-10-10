@@ -13,4 +13,17 @@ public interface GfStorage {
 	 */
 	String create() throws GfServiceException;
 
+
+	String upload(String dirName, GfModule... modules) throws GfServiceException;
+
+
+	/**
+	 * <p>Upload grammar files and compile them into a PGF file. The response code is 204 if the upload was successful.</p>
+	 *
+	 * @param dirName name of the directory where the files are stored
+	 * @param modules GF modules (name + content)
+	 * @return TODO
+	 */
+	String make(String dirName, GfModule... modules) throws GfServiceException;
+
 }
