@@ -1,5 +1,6 @@
 package ch.uzh.ifi.attempto.gfservice.gfwebservice;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.simple.parser.ParseException;
 
 import ch.uzh.ifi.attempto.gfservice.GfModule;
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
@@ -33,13 +35,14 @@ public class GfWebStorage implements GfStorage {
 	}
 
 
-	public String upload(String dirName, GfModule... modules) throws GfServiceException {
-		return push(mUriCloud, "upload", dirName, modules);
-	}
-
-
-	public String make(String dirName, GfModule... modules) throws GfServiceException {
-		return push(mUriCloud, "make", dirName, modules);
+	public GfWebStorageResult make(String dirName, GfModule... modules) throws GfServiceException {
+		try {
+			return new GfWebStorageResult(push(mUriCloud, "make", dirName, modules));
+		} catch (IOException e) {
+			throw new GfServiceException(e);
+		} catch (ParseException e) {
+			throw new GfServiceException(e);
+		}
 	}
 
 

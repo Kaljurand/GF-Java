@@ -68,6 +68,10 @@
                 <pathelement location="${classes}"/>
             </classpath>
         </javac>
+        <copy todir="bin/ch/uzh/ifi/attempto/gfservice/gfwebservice/">
+            <fileset dir="test/ch/uzh/ifi/attempto/gfservice/gfwebservice" includes="*.gf"/>
+        </copy>
+
         <mkdir dir="${test_report}"/>
         <junit printsummary="yes" haltonfailure="no" fork="on">
             <classpath>

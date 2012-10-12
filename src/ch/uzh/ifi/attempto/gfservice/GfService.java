@@ -34,8 +34,8 @@ public interface GfService {
 	 * @return GfServiceResultParse
 	 * @throws GfServiceException
 	 */
-	GfServiceResultParse parse(String cat, String input, String from) throws GfServiceException;
 	GfServiceResultParse parse(String cat, String input, String from, Integer limit) throws GfServiceException;
+	GfServiceResultParse parse(String cat, String input, String from) throws GfServiceException;
 
 
 	/**
@@ -66,8 +66,8 @@ public interface GfService {
 	 * @return GfServiceResultTranslate
 	 * @throws GfServiceException
 	 */
-	GfServiceResultTranslate translate(String cat, String input, String from, String to) throws GfServiceException;
 	GfServiceResultTranslate translate(String cat, String input, String from, String to, Integer limit) throws GfServiceException;
+	GfServiceResultTranslate translate(String cat, String input, String from, String to) throws GfServiceException;
 
 
 	/**

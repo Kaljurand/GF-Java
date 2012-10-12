@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="lib/httpclient-4.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/guava-11.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
