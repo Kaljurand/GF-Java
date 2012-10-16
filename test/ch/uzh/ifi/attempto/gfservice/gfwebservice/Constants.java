@@ -10,9 +10,6 @@ public class Constants {
 	public static final String GRAMMAR_DIR_CLOUD = "/tmp/gfse.74044909/";
 	public static final String GRAMMAR_DIR_LOCALHOST = "/grammars/";
 
-	public static final String RESULT_CODE_OK = "OK";
-	public static final String RESULT_CODE_ERROR = "Error";
-
 	public static final String MSGY_ILLEGAL_ARGUMENT_EXCEPTION = "should throw IllegalArgumentException";
 	public static final String MSG_URI_SYNTAX_EXCEPTION = "should NOT throw URISyntaxException";
 	public static final String MSG_GF_SERVICE_EXCEPTION = "should NOT throw GfServiceException";

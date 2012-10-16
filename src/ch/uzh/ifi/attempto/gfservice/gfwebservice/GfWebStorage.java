@@ -49,7 +49,7 @@ public class GfWebStorage implements GfStorage {
 	private String push(URI uri, String command, String dirName, GfModule... modules) throws GfServiceException {
 		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 		for (GfModule module : modules) {
-			pairs.add(new BasicNameValuePair(module.getName(), module.getContent()));
+			pairs.add(new BasicNameValuePair(module.getFilename(), module.getContent()));
 		}
 		pairs.add(new BasicNameValuePair("dir", dirName));
 		pairs.add(new BasicNameValuePair("command", command));

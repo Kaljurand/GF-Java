@@ -24,10 +24,10 @@ public class GfWebStorageTest {
 
 	static {
 		try {
-			GF_MODULE_ERROR = getGfModule("Error.gf");
-			GF_MODULE_GO = getGfModule("Go.gf");
-			GF_MODULE_GO_ENG = getGfModule("GoEng.gf");
-			GF_MODULE_GO_APP = getGfModule("GoApp.gf");
+			GF_MODULE_ERROR = getGfModule("Error");
+			GF_MODULE_GO = getGfModule("Go");
+			GF_MODULE_GO_ENG = getGfModule("GoEng");
+			GF_MODULE_GO_APP = getGfModule("GoApp");
 		} catch (IOException e) {
 			fail(Constants.MSG_PROGRAMMER_ERROR + ": " + e);
 		}
@@ -47,7 +47,7 @@ public class GfWebStorageTest {
 		try {
 			GfWebStorageResult result = GF_WEB_STORAGE.make(DIR_NAME, GF_MODULE_GO, GF_MODULE_GO_ENG, GF_MODULE_GO_APP);
 			show(result);
-			assertEquals(Constants.RESULT_CODE_OK, result.getResultCode());
+			assertEquals(true, result.isSuccess());
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}
@@ -59,7 +59,7 @@ public class GfWebStorageTest {
 		try {
 			GfWebStorageResult result = GF_WEB_STORAGE.make(DIR_NAME, GF_MODULE_ERROR);
 			show(result);
-			assertEquals(Constants.RESULT_CODE_ERROR, result.getResultCode());
+			assertEquals(GfWebStorageResult.RESULT_CODE_ERROR, result.getResultCode());
 			assertEquals(true, result.getMessage().startsWith(GF_MODULE_ERROR.getName()));
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
@@ -68,7 +68,8 @@ public class GfWebStorageTest {
 
 
 	private static GfModule getGfModule(String name) throws IOException {
-		return new GfModule(name, getFileContent(name));
+		String filename = name + GfModule.EXT;
+		return new GfModule(name, getFileContent(filename));
 	}
 
 
