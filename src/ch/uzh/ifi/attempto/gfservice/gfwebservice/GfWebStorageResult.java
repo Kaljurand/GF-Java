@@ -33,38 +33,22 @@ public class GfWebStorageResult implements GfStorageResult {
 
 
 	public String getResultCode() {
-		Object code = mJo.get(RESULT_CODE);
-		if (code instanceof String) {
-			return code.toString();
-		}
-		return null;
+		return JsonUtils.getString(mJo, RESULT_CODE);
 	}
 
 
 	public boolean isSuccess() {
-		Object code = mJo.get(RESULT_CODE);
-		if (code instanceof String) {
-			return RESULT_CODE_OK.equals(code.toString());
-		}
-		return false;
+		return RESULT_CODE_OK.equals(getResultCode());
 	}
 
 
 	public String getMessage() {
-		Object obj = mJo.get(MESSAGE);
-		if (obj instanceof String) {
-			return obj.toString();
-		}
-		return null;
+		return JsonUtils.getString(mJo, MESSAGE);
 	}
 
 
 	public String getCommand() {
-		Object code = mJo.get(COMMAND);
-		if (code instanceof String) {
-			return code.toString();
-		}
-		return null;
+		return JsonUtils.getString(mJo, COMMAND);
 	}
 
 

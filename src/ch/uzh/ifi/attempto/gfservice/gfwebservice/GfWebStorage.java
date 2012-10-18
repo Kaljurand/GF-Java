@@ -22,16 +22,32 @@ import ch.uzh.ifi.attempto.gfservice.GfStorage;
 public class GfWebStorage implements GfStorage {
 
 	private final URI mUriNew;
+	private final URI mUriParse;
 	private final URI mUriCloud;
 
 	public GfWebStorage(URI uri) {
 		mUriNew = URI.create(uri + "/new");
+		mUriParse = URI.create(uri + "/parse");
 		mUriCloud = URI.create(uri + "/cloud");
 	}
 
 
 	public String create() throws GfServiceException {
 		return HttpUtils.getHttpEntityAsString(new DefaultHttpClient(), new HttpGet(mUriNew));
+	}
+
+
+	public GfWebParseResult parse(GfModule module) throws GfServiceException {
+		try {
+			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+			pairs.add(new BasicNameValuePair(module.getFilename(), module.getContent()));
+			HttpPost post = HttpUtils.getHttpPost(mUriParse, pairs);
+			return new GfWebParseResult(HttpUtils.getHttpEntityAsString(new DefaultHttpClient(), post));
+		} catch (IOException e) {
+			throw new GfServiceException(e);
+		} catch (ParseException e) {
+			throw new GfServiceException(e);
+		}
 	}
 
 

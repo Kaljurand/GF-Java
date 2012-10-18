@@ -80,4 +80,13 @@ public class JsonUtils {
 		return map;
 	}
 
+
+	public static String getString(JSONObject jo, String key) {
+		Object obj = jo.get(key);
+		if (obj instanceof String) {
+			return obj.toString();
+		}
+		return null;
+	}
+
 }
