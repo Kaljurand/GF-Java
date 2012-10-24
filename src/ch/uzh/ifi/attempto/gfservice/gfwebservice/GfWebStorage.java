@@ -21,6 +21,10 @@ import ch.uzh.ifi.attempto.gfservice.GfStorage;
  */
 public class GfWebStorage implements GfStorage {
 
+	private static final String DIR = "dir";
+	private static final String COMMAND = "command";
+	private static final String COMMAND_REMAKE = "remake";
+
 	private final URI mUriNew;
 	private final URI mUriParse;
 	private final URI mUriCloud;
@@ -51,9 +55,29 @@ public class GfWebStorage implements GfStorage {
 	}
 
 
-	public GfWebStorageResult make(String dirName, GfModule... modules) throws GfServiceException {
+	public GfWebStorageResult update(String dirName, GfModule module, Iterable<String> moduleNames) throws GfServiceException {
 		try {
-			return new GfWebStorageResult(push(mUriCloud, "make", dirName, modules));
+			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+			pairs.add(new BasicNameValuePair(DIR, dirName));
+			pairs.add(new BasicNameValuePair(COMMAND, COMMAND_REMAKE));
+			pairs.add(new BasicNameValuePair(module.getFilename(), module.getContent()));
+			for (String moduleName : moduleNames) {
+				// Note that "null" sets the query parameter value to empty string
+				pairs.add(new BasicNameValuePair(moduleName + GfModule.EXT, null));
+			}
+			HttpPost post = HttpUtils.getHttpPost(mUriCloud, pairs);
+			return new GfWebStorageResult(HttpUtils.getHttpEntityAsString(new DefaultHttpClient(), post));
+		} catch (IOException e) {
+			throw new GfServiceException(e);
+		} catch (ParseException e) {
+			throw new GfServiceException(e);
+		}
+	}
+
+
+	public GfWebStorageResult update(String dirName, GfModule... modules) throws GfServiceException {
+		try {
+			return new GfWebStorageResult(push(mUriCloud, COMMAND_REMAKE, dirName, modules));
 		} catch (IOException e) {
 			throw new GfServiceException(e);
 		} catch (ParseException e) {
@@ -67,8 +91,8 @@ public class GfWebStorage implements GfStorage {
 		for (GfModule module : modules) {
 			pairs.add(new BasicNameValuePair(module.getFilename(), module.getContent()));
 		}
-		pairs.add(new BasicNameValuePair("dir", dirName));
-		pairs.add(new BasicNameValuePair("command", command));
+		pairs.add(new BasicNameValuePair(DIR, dirName));
+		pairs.add(new BasicNameValuePair(COMMAND, command));
 		HttpPost post = HttpUtils.getHttpPost(uri, pairs);
 		return HttpUtils.getHttpEntityAsString(new DefaultHttpClient(), post);
 	}

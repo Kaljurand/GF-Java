@@ -3,6 +3,7 @@ package ch.uzh.ifi.attempto.gfservice.gfwebservice;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.junit.Test;
 
@@ -47,11 +48,37 @@ public class GfWebStorageTest {
 
 
 	@Test
-	public void testStorageMakeGo() {
+	public void testStorageUpdateGo() {
 		try {
-			GfWebStorageResult result = GF_WEB_STORAGE.make(DIR_NAME, GF_MODULE_GO, GF_MODULE_GO_ENG, GF_MODULE_GO_APP);
+			GfWebStorageResult result = GF_WEB_STORAGE.update(DIR_NAME, GF_MODULE_GO, GF_MODULE_GO_ENG, GF_MODULE_GO_APP);
 			show(result);
 			assertEquals(true, result.isSuccess());
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testStorageUpdateGo1() {
+		try {
+			GfWebStorageResult result = GF_WEB_STORAGE.update(DIR_NAME, GF_MODULE_GO_ENG,
+					Arrays.asList(GF_MODULE_GO_APP.getName()));
+			show(result);
+			assertEquals(true, result.isSuccess());
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testStorageUpdateGoError() {
+		try {
+			GfWebStorageResult result = GF_WEB_STORAGE.update(DIR_NAME, GF_MODULE_GO_ENG,
+					Arrays.asList(Constants.NON_EXISTENT));
+			show(result);
+			assertEquals(false, result.isSuccess());
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}
@@ -102,9 +129,9 @@ public class GfWebStorageTest {
 
 
 	@Test
-	public void testStorageMakeError() {
+	public void testStorageUpdateError() {
 		try {
-			GfWebStorageResult result = GF_WEB_STORAGE.make(DIR_NAME, GF_MODULE_ERROR);
+			GfWebStorageResult result = GF_WEB_STORAGE.update(DIR_NAME, GF_MODULE_ERROR, Constants.EMPTY_STRING_SET);
 			show(result);
 			assertEquals(GfWebStorageResult.RESULT_CODE_ERROR, result.getResultCode());
 			assertEquals(true, result.getMessage().startsWith(GF_MODULE_ERROR.getName()));
