@@ -24,6 +24,8 @@ public class GfWebStorageTest {
 	private static GfModule GF_MODULE_GO = null;
 	private static GfModule GF_MODULE_GO_ENG = null;
 	private static GfModule GF_MODULE_GO_APP = null;
+	private static GfModule GF_MODULE_DUMMY_1 = null;
+	private static GfModule GF_MODULE_DUMMY_2 = null;
 
 	static {
 		try {
@@ -33,6 +35,8 @@ public class GfWebStorageTest {
 			GF_MODULE_GO = getGfModule("Go");
 			GF_MODULE_GO_ENG = getGfModule("GoEng");
 			GF_MODULE_GO_APP = getGfModule("GoApp");
+			GF_MODULE_DUMMY_1 = new GfModule("Dummy1", "Dummy Content 1");
+			GF_MODULE_DUMMY_2 = new GfModule("Dummy2", "Dummy Content 2");
 		} catch (IOException e) {
 			fail(Constants.MSG_PROGRAMMER_ERROR + ": " + e);
 		}
@@ -137,6 +141,27 @@ public class GfWebStorageTest {
 			assertEquals(true, result.getMessage().startsWith(GF_MODULE_ERROR.getName()));
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testStorageUploadGo() {
+		try {
+			GF_WEB_STORAGE.upload(DIR_NAME, GF_MODULE_GO, GF_MODULE_DUMMY_1, GF_MODULE_DUMMY_2);
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testStorageUploadGoIntoNonExistentDir() {
+		try {
+			GF_WEB_STORAGE.upload(Constants.NON_EXISTENT, GF_MODULE_DUMMY_1);
+			fail(Constants.MSGY_GF_SERVICE_EXCEPTION);
+		} catch (GfServiceException e) {
+			show(e);
 		}
 	}
 

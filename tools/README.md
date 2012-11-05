@@ -2,6 +2,7 @@ Tools
 =====
 
 Some tools for working with the GF webservice (not really specific to GF-Java).
+Newer versions are in https://github.com/Kaljurand/GF-Utils
 
 info.py
 -------

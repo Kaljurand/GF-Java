@@ -35,8 +35,6 @@ public interface GfStorage {
 	 * <p>Updates the given GF module in the given directory and compiles it into a new
 	 * PGF together with the previously updated modules with the given names.</p>
 	 *
-	 * TODO: check the response code (i.e. it is supposed to be 204 for successful uploads)
-	 *
 	 * @param dirName name of the directory where the files are stored
 	 * @param module GF module (name + content)
 	 * @param moduleNames names of GF modules which are expected to exist in the directory
@@ -46,15 +44,34 @@ public interface GfStorage {
 
 
 	/**
+	 * <p>Updates the PGF based on the previously uploaded modules with the given names.</p>
+	 *
+	 * @param dirName name of the directory where the files are stored
+	 * @param moduleNames names of GF modules which are expected to exist in the directory
+	 * @return GfStorageResult
+	 */
+	GfStorageResult update(String dirName, Iterable<String> moduleNames) throws GfServiceException;
+
+
+	/**
 	 * <p>Uploads the given GF modules into the given directory
 	 * and compiles them into a PGF file.</p>
-	 *
-	 * TODO: check the response code (i.e. it is supposed to be 204 for successful uploads)
 	 *
 	 * @param dirName name of the directory where the files are stored
 	 * @param modules GF modules (name + content)
 	 * @return GfStorageResult
 	 */
 	GfStorageResult update(String dirName, GfModule... modules) throws GfServiceException;
+
+
+	/**
+	 * <p>Upload files to be stored in the cloud. Unsuccessful uploads (i.e. response
+	 * code != 204) cause an exception to be thrown.</p>
+	 *
+	 * @param dirName name of the directory where the files are stored
+	 * @param modules GF modules (name + content)
+	 * @throws GfServiceException
+	 */
+	void upload(String dirName, GfModule... modules) throws GfServiceException;
 
 }

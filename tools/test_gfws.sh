@@ -1,7 +1,10 @@
 json="json_xs"
 #json="python -mjson.tool"
 
-pgf="http://localhost:41296/grammars/Go.pgf"
+server="http://localhost:41296"
+
+pgf="${server}/grammars/Go.pgf"
+cloud="${server}/cloud"
 
 curl "$pgf?command=grammar" | $json
 
@@ -20,3 +23,6 @@ curl "$pgf?command=abstrtree&tree=n3" > diagram_abstrtree.png
 curl "$pgf?command=parsetree&tree=n3&from=GoEng&format=gv" > diagram_parsetree.dot
 
 curl "$pgf?command=alignment&tree=n3&format=svg" > diagram_alignment.svg
+
+echo "curl $cloud?dir=/tmp/dir/&command=upload&file=content"
+curl "$cloud?dir=/tmp/dir/&command=upload&file=content"

@@ -1,7 +1,7 @@
 Java interface to GF
 ====================
 
-Java front-end to a GF service, modeled after the GF Webservice.
+Java front-end to a GF service, modeled after the GF Webservice / GF Cloud Service
 
 Status
 ------
@@ -13,11 +13,12 @@ Status
 Backends
 --------
 
-### GF Webservice
+### GF Webservice / GF Cloud Service
 
 Documentation:
 
-http://code.google.com/p/grammatical-framework/wiki/GFWebServiceAPI
+  - http://code.google.com/p/grammatical-framework/wiki/GFWebServiceAPI
+  - http://cloud.grammaticalframework.org/gf-cloud-api.html
 
 Starting:
 
