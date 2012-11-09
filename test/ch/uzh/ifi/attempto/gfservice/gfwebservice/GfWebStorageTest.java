@@ -77,6 +77,23 @@ public class GfWebStorageTest {
 
 
 	@Test
+	public void testStorageUpdateGo2() {
+		try {
+			GfWebStorageResult result = GF_WEB_STORAGE.update(
+					DIR_NAME,
+					"Unit",
+					true,
+					Arrays.asList(GF_MODULE_GO_APP.getName()),
+					GF_MODULE_GO_ENG);
+			show(result);
+			assertEquals(true, result.isSuccess());
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
 	public void testStorageUpdateGoError() {
 		try {
 			GfWebStorageResult result = GF_WEB_STORAGE.update(DIR_NAME, GF_MODULE_GO_ENG,

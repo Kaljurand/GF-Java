@@ -27,6 +27,8 @@ public class GfWebStorage implements GfStorage {
 	private static final String COMMAND = "command";
 	private static final String COMMAND_REMAKE = "remake";
 	private static final String COMMAND_UPLOAD = "upload";
+	private static final String START_CAT = "--startcat";
+	private static final String OPTIMIZE_PGF = "--optimize-pgf";
 
 	private final URI mUriNew;
 	private final URI mUriParse;
@@ -95,6 +97,35 @@ public class GfWebStorage implements GfStorage {
 	public GfWebStorageResult update(String dirName, GfModule... modules) throws GfServiceException {
 		try {
 			return new GfWebStorageResult(push(mUriCloud, COMMAND_REMAKE, dirName, modules));
+		} catch (IOException e) {
+			throw new GfServiceException(e);
+		} catch (ParseException e) {
+			throw new GfServiceException(e);
+		}
+	}
+
+
+	public GfWebStorageResult update(String dirName, String startCat, boolean optimize,
+			Iterable<String> moduleNames, GfModule... modules)
+					throws GfServiceException {
+
+		try {
+			List<NameValuePair> pairs = makeParameters(COMMAND_REMAKE, dirName);
+			for (String moduleName : moduleNames) {
+				// Note that "null" sets the query parameter value to empty string
+				pairs.add(new BasicNameValuePair(moduleName + GfModule.EXT, null));
+			}
+			for (GfModule module : modules) {
+				pairs.add(new BasicNameValuePair(module.getFilename(), module.getContent()));
+			}
+			if (startCat != null) {
+				pairs.add(new BasicNameValuePair(START_CAT, startCat));
+			}
+			if (optimize) {
+				pairs.add(new BasicNameValuePair(OPTIMIZE_PGF, null));
+			}
+			HttpPost post = HttpUtils.getHttpPost(mUriCloud, pairs);
+			return new GfWebStorageResult(HttpUtils.getHttpEntityAsString(new DefaultHttpClient(), post));
 		} catch (IOException e) {
 			throw new GfServiceException(e);
 		} catch (ParseException e) {

@@ -65,6 +65,25 @@ public interface GfStorage {
 
 
 	/**
+	 * <p>Updates the given GF modules in the given directory and compiles them into a new
+	 * PGF together with the previously updated modules with the given names.
+	 * The default start category is overridden by the given category (unless it is <code>null</code>).
+	 * Unlike the other <code>update</code>-methods, this method can produce an "optimized" PGF,
+	 * where everything that is not reachable from the start category is removed, often resulting
+	 * in a smaller and faster grammar.</p>
+	 *
+	 * @param dirName name of the directory where the files are stored
+	 * @param startCat PGF start category to override the default start category
+	 * @param optimize iff <code>true</code>, then optimize the PGF
+	 * @param moduleNames names of GF modules which are expected to exist in the directory
+	 * @param modules GF modules (name + content)
+	 * @return GfStorageResult
+	 */
+	GfStorageResult update(String dirName, String startCat, boolean optimize,
+			Iterable<String> moduleNames, GfModule... modules) throws GfServiceException;
+
+
+	/**
 	 * <p>Upload files to be stored in the cloud. Unsuccessful uploads (i.e. response
 	 * code != 204) cause an exception to be thrown.</p>
 	 *
