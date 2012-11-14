@@ -7,5 +7,7 @@ public enum Param {
 	CAT,
 	FROM,
 	TO,
-	LIMIT;
+	LIMIT,
+	ID,
+	FORMAT;
 }

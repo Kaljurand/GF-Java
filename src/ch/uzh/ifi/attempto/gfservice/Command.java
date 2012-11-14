@@ -9,5 +9,6 @@ public enum Command {
 	COMPLETE,
 	ABSTRTREE,
 	PARSETREE,
-	ALIGNMENT;
+	ALIGNMENT,
+	BROWSE;
 }

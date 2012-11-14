@@ -166,6 +166,21 @@ public class GfWebService implements GfService {
 	}
 
 
+	public GfWebServiceResultBrowse browse(String id) throws GfServiceException {
+		Params p = new Params(Command.BROWSE);
+		p.add(Param.ID, id);
+		p.add(Param.FORMAT, "json");
+		String response = getResponseAsString(p.get());
+		try {
+			return new GfWebServiceResultBrowse(response);
+		} catch (IOException e) {
+			throw new GfServiceException(e);
+		} catch (ParseException e) {
+			throw new GfServiceException(e);
+		}
+	}
+
+
 	private String getResponseAsString(List<NameValuePair> nvps) throws GfServiceException {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpUriRequest request = getHttpUriRequest(nvps);

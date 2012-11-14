@@ -125,4 +125,14 @@ public interface GfService {
 	 */
 	GfServiceResultAlignment alignment(@NotNull String tree) throws GfServiceException;
 
+
+	/**
+	 * <p>Returns information (producers and consumers) about the given category or function.</p>
+	 *
+	 * @param id search query (name of a category or function)
+	 * @return GfServiceResultBrowse
+	 * @throws GfServiceException
+	 */
+	GfServiceResultBrowse browse(@NotNull String id) throws GfServiceException;
+
 }

@@ -14,6 +14,7 @@ import org.junit.Test;
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultAbstrtree;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultAlignment;
+import ch.uzh.ifi.attempto.gfservice.GfServiceResultBrowse;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultComplete;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultGrammar;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultLinearize;
@@ -37,6 +38,9 @@ public class GfWebServiceTest {
 	private static final Set<String> FUNCTIONS = new HashSet<String>(Arrays.asList(new String[] {
 			"n1", "n2", "n3", "n4", "n5", "go", "meter", "forward", "back" }));
 	private static final Set<String> LANGUAGES = new HashSet<String>(Arrays.asList(new String[] { "GoEst", "GoApp", "GoEng" }));
+
+	private static final Set<String> T_BROWSE_0_PRODUCERS = new HashSet<String>(Arrays.asList(new String[] { "go" }));
+	private static final Set<String> T_BROWSE_0_CONSUMERS = new HashSet<String>(Arrays.asList(new String[] { }));
 
 	private static final String UNPARSABLE_STRING = "adkasdasdasda;slqwe0otkfef0sfs d ada-sdasd";
 
@@ -284,6 +288,18 @@ public class GfWebServiceTest {
 			//System.out.println("<img src=\"" + result.getDataUri() + "\">");
 			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
 					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testBrowse() {
+		try {
+			GfServiceResultBrowse result = GF_SERVICE.browse(STARTCAT);
+			assertEquals(T_BROWSE_0_PRODUCERS, result.getProducers());
+			assertEquals(T_BROWSE_0_CONSUMERS, result.getConsumers());
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}

@@ -55,7 +55,7 @@ public class GfWebStorageTest {
 	public void testStorageUpdateGo() {
 		try {
 			GfWebStorageResult result = GF_WEB_STORAGE.update(DIR_NAME, GF_MODULE_GO, GF_MODULE_GO_ENG, GF_MODULE_GO_APP);
-			show(result);
+			TestUtils.show(result);
 			assertEquals(true, result.isSuccess());
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
@@ -68,7 +68,7 @@ public class GfWebStorageTest {
 		try {
 			GfWebStorageResult result = GF_WEB_STORAGE.update(DIR_NAME, GF_MODULE_GO_ENG,
 					Arrays.asList(GF_MODULE_GO_APP.getName()));
-			show(result);
+			TestUtils.show(result);
 			assertEquals(true, result.isSuccess());
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
@@ -85,7 +85,7 @@ public class GfWebStorageTest {
 					true,
 					Arrays.asList(GF_MODULE_GO_APP.getName()),
 					GF_MODULE_GO_ENG);
-			show(result);
+			TestUtils.show(result);
 			assertEquals(true, result.isSuccess());
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
@@ -98,7 +98,7 @@ public class GfWebStorageTest {
 		try {
 			GfWebStorageResult result = GF_WEB_STORAGE.update(DIR_NAME, GF_MODULE_GO_ENG,
 					Arrays.asList(Constants.NON_EXISTENT));
-			show(result);
+			TestUtils.show(result);
 			assertEquals(false, result.isSuccess());
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
@@ -110,7 +110,7 @@ public class GfWebStorageTest {
 	public void testStorageParseError() {
 		try {
 			GfWebParseResult result = GF_WEB_STORAGE.parse(GF_MODULE_ERROR);
-			show(result);
+			TestUtils.show(result);
 			assertEquals(true, result.containsFilename(GF_MODULE_ERROR.getFilename()));
 			assertEquals(true, result.isSuccess());
 		} catch (GfServiceException e) {
@@ -123,7 +123,7 @@ public class GfWebStorageTest {
 	public void testStorageParseError1() {
 		try {
 			GfWebParseResult result = GF_WEB_STORAGE.parse(GF_MODULE_ERROR_SYNTAX_1);
-			show(result);
+			TestUtils.show(result);
 			assertEquals(true, result.containsFilename(GF_MODULE_ERROR_SYNTAX_1.getFilename()));
 			assertEquals(false, result.isSuccess());
 			assertEquals(GfWebParseResult.RESULT_CODE_SYNTAX, result.getResultCode());
@@ -138,7 +138,7 @@ public class GfWebStorageTest {
 	public void testStorageParseError2() {
 		try {
 			GfWebParseResult result = GF_WEB_STORAGE.parse(GF_MODULE_ERROR_SYNTAX_2);
-			show(result);
+			TestUtils.show(result);
 			assertEquals(true, result.containsFilename(GF_MODULE_ERROR_SYNTAX_2.getFilename()));
 			assertEquals(false, result.isSuccess());
 			assertEquals(GfWebParseResult.RESULT_CODE_SYNTAX, result.getResultCode());
@@ -153,7 +153,7 @@ public class GfWebStorageTest {
 	public void testStorageUpdateError() {
 		try {
 			GfWebStorageResult result = GF_WEB_STORAGE.update(DIR_NAME, GF_MODULE_ERROR, Constants.EMPTY_STRING_SET);
-			show(result);
+			TestUtils.show(result);
 			assertEquals(GfWebStorageResult.RESULT_CODE_ERROR, result.getResultCode());
 			assertEquals(true, result.getMessage().startsWith(GF_MODULE_ERROR.getName()));
 		} catch (GfServiceException e) {
@@ -178,7 +178,7 @@ public class GfWebStorageTest {
 			GF_WEB_STORAGE.upload(Constants.NON_EXISTENT, GF_MODULE_DUMMY_1);
 			fail(Constants.MSGY_GF_SERVICE_EXCEPTION);
 		} catch (GfServiceException e) {
-			show(e);
+			TestUtils.show(e);
 		}
 	}
 
@@ -191,11 +191,6 @@ public class GfWebStorageTest {
 
 	private static String getFileContent(String name) throws IOException {
 		return Resources.toString(Resources.getResource(GfWebStorageTest.class, name), Charsets.UTF_8);
-	}
-
-
-	private static void show(Object o) {
-		System.out.println(o.toString());
 	}
 
 }
