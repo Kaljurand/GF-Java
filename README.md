@@ -20,11 +20,16 @@ Documentation:
   - http://code.google.com/p/grammatical-framework/wiki/GFWebServiceAPI
   - http://cloud.grammaticalframework.org/gf-cloud-api.html
 
-Starting:
+Starting (requires GF version 2012-11-14 or newer):
 
-	$ GF_RESTRICTED=yes gf -server
+	$ GF_RESTRICTED=yes gf --server --document-root document-root
 
 See usage examples in `tools/test_gfws.sh`.
+
+### JPGF
+
+JPGF could be another possible backend, but currently calls to it have
+not been implemented.
 
 Building
 --------
@@ -33,12 +38,6 @@ This includes testing against the locally running GF server.
 
 	$ mvn package
 
+Building the website
 
-Testing using a local GF webservice
------------------------------------
-
-Make sure that the PGF files used in testing (e.g. `Go.pgf`) are included in the
-server directory ("document root"),
-as a missing grammar file would cause _500 Internal Server Error_.
-
-	$ cp grammars/Go.pgf /home/kaarel/.cabal/share/gf-3.3/www/grammars/
+	$ mvn site
