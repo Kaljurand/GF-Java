@@ -41,3 +41,13 @@ This includes testing against the locally running GF server.
 Building the website
 
 	$ mvn site
+
+
+Setting up an Eclipse project
+-----------------------------
+
+The Eclipse (or any other IDE) project files are not included in
+this repository. To generate the required Eclipse files, run:
+
+	$ mvn -Declipse.workspace=/home/yourname/workspace/ eclipse:configure-workspace
+	$ mvn eclipse:eclipse
