@@ -1,5 +1,7 @@
 package ch.uzh.ifi.attempto.gfservice;
 
+import java.util.List;
+
 /**
  * <p>Java front-end to a GF service, modeled after the
  * <a href="http://code.google.com/p/grammatical-framework/wiki/GFWebServiceAPI">GF webservice</a>.</p>
@@ -134,5 +136,24 @@ public interface GfService {
 	 * @throws GfServiceException
 	 */
 	GfServiceResultBrowse browse(@NotNull String id) throws GfServiceException;
+
+
+	/**
+	 * <p>Generates a list of parse results based on parseable strings obtained
+	 * from growing the input string one token at a time, exhaustively covering all
+	 * token lengths. I.e. this method can be used to
+	 * generate all possible sentences shorter than some length in tokens.</p>
+	 *
+	 * TODO: add input arguments for various limits: (1) limit the number of results,
+	 * (2) limit the token length (i.e. levels in the search tree).
+	 *
+	 * @param cat start category for the parser (defaults to: the default start category)
+	 * @param input incomplete string the rest of which will be generated
+	 * @param from language to use for parsing
+	 * @param limit maximal number of results to be generated (defaults to: all)
+	 * @return List<GfServiceResultParse>
+	 * @throws GfServiceException
+	 */
+	List<GfServiceResultParse> generate(String cat, String input, String from, Integer limit) throws GfServiceException;
 
 }

@@ -3,7 +3,10 @@ package ch.uzh.ifi.attempto.gfservice.gfwebservice;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -18,6 +21,7 @@ import org.json.simple.parser.ParseException;
 import ch.uzh.ifi.attempto.gfservice.Command;
 import ch.uzh.ifi.attempto.gfservice.GfService;
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
+import ch.uzh.ifi.attempto.gfservice.GfServiceResultParse;
 import ch.uzh.ifi.attempto.gfservice.Param;
 
 /**
@@ -178,6 +182,42 @@ public class GfWebService implements GfService {
 		} catch (ParseException e) {
 			throw new GfServiceException(e);
 		}
+	}
+
+
+	/**
+	 * This is breadth-first search (using a queue) over completions.
+	 * It is not very efficient because it makes lots of parse and complete calls
+	 * to the webservice.
+	 *
+	 * TODO: input must currently end with a full word (because we add a space to it).
+	 * TODO: use sensible limits in the parse and complete calls
+	 */
+	public List<GfServiceResultParse> generate(String cat, String input, String from, Integer limit) throws GfServiceException {
+		List<GfServiceResultParse> results = new ArrayList<GfServiceResultParse>();
+		int completionCount = 1;
+		Queue<String> nodes = new LinkedList<String>();
+		nodes.offer(input);
+
+		while (! nodes.isEmpty()) {
+			String str = nodes.remove();
+			GfWebServiceResultParse parse = parse(cat, str, from, 10); // TODO: replace 10
+			if (! parse.getTrees(from).isEmpty()) {
+				results.add(parse);
+			}
+			String cstr = str + " ";
+			GfWebServiceResultComplete complete = complete(cat, cstr, from, 20); // TODO: replace 20
+			for (String c : complete.getCompletions(from)) {
+				nodes.offer(cstr + c);
+				completionCount++;
+
+				// TODO: temporary
+				if (limit != null && completionCount > limit) {
+					return results;
+				}
+			}
+		}
+		return results;
 	}
 
 

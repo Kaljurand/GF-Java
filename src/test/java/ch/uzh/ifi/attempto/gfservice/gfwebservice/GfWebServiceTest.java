@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -63,6 +64,17 @@ public class GfWebServiceTest {
 	private static final Set<String> T_TRANSLATE_1_OUT_TRANSLATIONS = new HashSet<String>(Arrays.asList(new String[] { "3" }));
 
 	private static final String T_ALIGNMENT_0_OUT_DATAURI_PREFIX = "data:image/png;base64,";
+
+	// The input should currently end with a complete word
+	private static final String T_GENERATE_0_INPUT = "go";
+	private static final int T_GENERATE_0_LIMIT = 123;
+	// go X meters Y (where X is in {1..5} and Y is in {back,forward})
+	// i.e. 10 possible strings
+	private static final int T_GENERATE_0_SIZE = 10;
+
+	private static final String T_GENERATE_1_INPUT = "go two";
+	private static final int T_GENERATE_1_LIMIT = 123;
+	private static final int T_GENERATE_1_SIZE = 2;
 
 	static {
 		GF_SERVICE = new GfWebService(Constants.WS_URI, Constants.GRAMMAR_DIR_LOCALHOST + GRAMMAR_PGF);
@@ -300,6 +312,27 @@ public class GfWebServiceTest {
 			GfServiceResultBrowse result = GF_SERVICE.browse(STARTCAT);
 			assertEquals(T_BROWSE_0_PRODUCERS, result.getProducers());
 			assertEquals(T_BROWSE_0_CONSUMERS, result.getConsumers());
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testGenerate0() {
+		try {
+			List<GfServiceResultParse> results = GF_SERVICE.generate(null, T_GENERATE_0_INPUT, FROM, T_GENERATE_0_LIMIT);
+			assertEquals(T_GENERATE_0_SIZE, results.size());
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+	@Test
+	public void testGenerate1() {
+		try {
+			List<GfServiceResultParse> results = GF_SERVICE.generate(null, T_GENERATE_1_INPUT, FROM, T_GENERATE_1_LIMIT);
+			assertEquals(T_GENERATE_1_SIZE, results.size());
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}
