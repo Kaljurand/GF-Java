@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -218,6 +219,62 @@ public class GfWebService implements GfService {
 			}
 		}
 		return results;
+	}
+
+
+	/**
+	 * This is breadth-first search (using a queue) over completions.
+	 * It is not very efficient because it makes lots of parse and complete calls
+	 * to the webservice.
+	 *
+	 * TODO: input must currently end with a full word (because we add a space to it).
+	 * TODO: use sensible limits in the parse and complete calls
+	 */
+	public Iterable<GfServiceResultParse> generate(final String cat, String input, final String from) {
+		final Queue<String> nodes = new LinkedList<String>();
+		nodes.offer(input);
+
+		return new Iterable<GfServiceResultParse>() {
+
+			public Iterator<GfServiceResultParse> iterator() {
+				return new Iterator<GfServiceResultParse>() {
+
+					public boolean hasNext() {
+						// TODO implement correctly
+						return ! nodes.isEmpty();
+					}
+
+					public GfServiceResultParse next() {
+						while (! nodes.isEmpty()) {
+							String str = nodes.remove();
+							try {
+								GfWebServiceResultParse parse = parse(cat, str, from, 10); // TODO: replace 10
+								if (! parse.getTrees(from).isEmpty()) {
+									return parse;
+								}
+							} catch (GfServiceException e) {
+								throw new RuntimeException(e);
+							}
+							String cstr = str + " ";
+							try {
+								GfWebServiceResultComplete complete = complete(cat, cstr, from, 20); // TODO: replace 20
+								for (String c : complete.getCompletions(from)) {
+									nodes.offer(cstr + c);
+								}
+							} catch (GfServiceException e) {
+								throw new RuntimeException(e);
+							}
+						}
+						return null;
+					}
+
+					public void remove() {
+						throw new UnsupportedOperationException();
+					}
+
+				};
+			}
+		};
 	}
 
 

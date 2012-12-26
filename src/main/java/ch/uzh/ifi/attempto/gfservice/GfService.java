@@ -156,4 +156,18 @@ public interface GfService {
 	 */
 	List<GfServiceResultParse> generate(String cat, String input, String from, Integer limit) throws GfServiceException;
 
+
+	/**
+	 * <p>Generates parse results based on parseable strings obtained
+	 * from growing the input string one token at a time, exhaustively covering all
+	 * token lengths. I.e. this method can be used to
+	 * generate all possible sentences shorter than some length in tokens.</p>
+	 *
+	 * @param cat start category for the parser (defaults to: the default start category)
+	 * @param input incomplete string the rest of which will be generated
+	 * @param from language to use for parsing
+	 * @return Iterable<GfServiceResultParse>
+	 */
+	Iterable<GfServiceResultParse> generate(String cat, String input, String from);
+
 }

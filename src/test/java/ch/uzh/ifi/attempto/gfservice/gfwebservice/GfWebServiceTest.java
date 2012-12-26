@@ -2,6 +2,7 @@ package ch.uzh.ifi.attempto.gfservice.gfwebservice;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -334,6 +335,19 @@ public class GfWebServiceTest {
 			List<GfServiceResultParse> results = GF_SERVICE.generate(null, T_GENERATE_1_INPUT, FROM, T_GENERATE_1_LIMIT);
 			assertEquals(T_GENERATE_1_SIZE, results.size());
 		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+	@Test
+	public void testGenerateIt0() {
+		try {
+			List<GfServiceResultParse> results = new ArrayList<GfServiceResultParse>();
+			for (GfServiceResultParse result : GF_SERVICE.generate(null, T_GENERATE_0_INPUT, FROM)) {
+				results.add(result);
+			}
+			assertEquals(T_GENERATE_0_SIZE, results.size());
+		} catch (RuntimeException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}
 	}
