@@ -1,6 +1,5 @@
 package ch.uzh.ifi.attempto.gfservice;
 
-import java.util.List;
 
 /**
  * <p>Java front-end to a GF service, modeled after the
@@ -139,35 +138,27 @@ public interface GfService {
 
 
 	/**
-	 * <p>Generates a list of parse results based on parseable strings obtained
+	 * <p>Generates prefixes of parseable strings obtained
 	 * from growing the input string one token at a time, exhaustively covering all
-	 * token lengths. I.e. this method can be used to
-	 * generate all possible sentences shorter than some length in tokens.</p>
+	 * token lengths.</p>
 	 *
-	 * TODO: add input arguments for various limits: (1) limit the number of results,
-	 * (2) limit the token length (i.e. levels in the search tree).
-	 *
-	 * @param cat start category for the parser (defaults to: the default start category)
+	 * @param cat start category for the parser (<code>null</code> = default start category)
 	 * @param input incomplete string the rest of which will be generated
-	 * @param from language to use for parsing
-	 * @param limit maximal number of results to be generated (defaults to: all)
-	 * @return List<GfServiceResultParse>
-	 * @throws GfServiceException
+	 * @param from language to use for completion
+	 * @param limit maximal number of completions to generate at each step (<code>null</code> = all)
+	 * @return iterator over prefixes
 	 */
-	List<GfServiceResultParse> generate(String cat, String input, String from, Integer limit) throws GfServiceException;
+	Iterable<String> generatePrefix(String cat, String input, String from, Integer limit);
 
 
 	/**
-	 * <p>Generates parse results based on parseable strings obtained
-	 * from growing the input string one token at a time, exhaustively covering all
-	 * token lengths. I.e. this method can be used to
-	 * generate all possible sentences shorter than some length in tokens.</p>
+	 * <p>Generates prefixes of parseable strings obtained
+	 * from growing the input one token at a time, exhaustively covering all
+	 * token lengths.</p>
 	 *
-	 * @param cat start category for the parser (defaults to: the default start category)
-	 * @param input incomplete string the rest of which will be generated
-	 * @param from language to use for parsing
-	 * @return Iterable<GfServiceResultParse>
+	 * @param from language to use for completion
+	 * @return iterator over prefixes
 	 */
-	Iterable<GfServiceResultParse> generate(String cat, String input, String from);
+	Iterable<String> generatePrefix(String from);
 
 }

@@ -3,10 +3,10 @@ package ch.uzh.ifi.attempto.gfservice.gfwebservice;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 import org.apache.http.NameValuePair;
@@ -22,13 +22,14 @@ import org.json.simple.parser.ParseException;
 import ch.uzh.ifi.attempto.gfservice.Command;
 import ch.uzh.ifi.attempto.gfservice.GfService;
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
-import ch.uzh.ifi.attempto.gfservice.GfServiceResultParse;
 import ch.uzh.ifi.attempto.gfservice.Param;
 
 /**
  * @author Kaarel Kaljurand
  */
 public class GfWebService implements GfService {
+
+	public static final char TOKEN_SEPARATOR = ' ';
 
 	private final URI mUri;
 	private String mGrammar;
@@ -188,84 +189,53 @@ public class GfWebService implements GfService {
 
 	/**
 	 * This is breadth-first search (using a queue) over completions.
-	 * It is not very efficient because it makes lots of parse and complete calls
-	 * to the webservice.
+	 * Note that the GfServiceException is not thrown here.
 	 *
-	 * TODO: input must currently end with a full word (because we add a space to it).
-	 * TODO: use sensible limits in the parse and complete calls
+	 * TODO: maybe return Iterable<List<String>>
 	 */
-	public List<GfServiceResultParse> generate(String cat, String input, String from, Integer limit) throws GfServiceException {
-		List<GfServiceResultParse> results = new ArrayList<GfServiceResultParse>();
-		int completionCount = 1;
-		Queue<String> nodes = new LinkedList<String>();
-		nodes.offer(input);
-
-		while (! nodes.isEmpty()) {
-			String str = nodes.remove();
-			GfWebServiceResultParse parse = parse(cat, str, from, 10); // TODO: replace 10
-			if (! parse.getTrees(from).isEmpty()) {
-				results.add(parse);
-			}
-			String cstr = str + " ";
-			GfWebServiceResultComplete complete = complete(cat, cstr, from, 20); // TODO: replace 20
-			for (String c : complete.getCompletions(from)) {
-				nodes.offer(cstr + c);
-				completionCount++;
-
-				// TODO: temporary
-				if (limit != null && completionCount > limit) {
-					return results;
-				}
-			}
-		}
-		return results;
-	}
-
-
-	/**
-	 * This is breadth-first search (using a queue) over completions.
-	 * It is not very efficient because it makes lots of parse and complete calls
-	 * to the webservice.
-	 *
-	 * TODO: input must currently end with a full word (because we add a space to it).
-	 * TODO: use sensible limits in the parse and complete calls
-	 */
-	public Iterable<GfServiceResultParse> generate(final String cat, String input, final String from) {
+	public Iterable<String> generatePrefix(final String cat, String input, final String from, final Integer limit) {
 		final Queue<String> nodes = new LinkedList<String>();
-		nodes.offer(input);
+		String initial = (input == null ? "" : input);
+		String prefix = "";
+		// If the initial input contains a token separator then we preserve it up to the last separator
+		// and use it as the prefix because the completer returns only the completed last token.
+		int lastIndex = initial.lastIndexOf(TOKEN_SEPARATOR);
+		if (lastIndex != -1) {
+			prefix = initial.substring(0, lastIndex + 1);
+		}
+		try {
+			GfWebServiceResultComplete complete = complete(cat, initial, from, limit);
+			for (String c : complete.getCompletions(from)) {
+				nodes.offer(prefix + c);
+			}
+		} catch (GfServiceException e) {
+			throw new RuntimeException(e);
+		}
 
-		return new Iterable<GfServiceResultParse>() {
+		return new Iterable<String>() {
 
-			public Iterator<GfServiceResultParse> iterator() {
-				return new Iterator<GfServiceResultParse>() {
+			public Iterator<String> iterator() {
+				return new Iterator<String>() {
 
 					public boolean hasNext() {
-						// TODO implement correctly
 						return ! nodes.isEmpty();
 					}
 
-					public GfServiceResultParse next() {
-						while (! nodes.isEmpty()) {
-							String str = nodes.remove();
-							try {
-								GfWebServiceResultParse parse = parse(cat, str, from, 10); // TODO: replace 10
-								if (! parse.getTrees(from).isEmpty()) {
-									return parse;
-								}
-							} catch (GfServiceException e) {
-								throw new RuntimeException(e);
-							}
-							String cstr = str + " ";
-							try {
-								GfWebServiceResultComplete complete = complete(cat, cstr, from, 20); // TODO: replace 20
-								for (String c : complete.getCompletions(from)) {
-									nodes.offer(cstr + c);
-								}
-							} catch (GfServiceException e) {
-								throw new RuntimeException(e);
-							}
+					public String next() {
+						if (nodes.isEmpty()) {
+							throw new NoSuchElementException();
 						}
-						return null;
+						String str = nodes.remove();
+						String cstr = str + TOKEN_SEPARATOR;
+						try {
+							GfWebServiceResultComplete complete = complete(cat, cstr, from, limit);
+							for (String c : complete.getCompletions(from)) {
+								nodes.offer(cstr + c);
+							}
+						} catch (GfServiceException e) {
+							throw new RuntimeException(e);
+						}
+						return str;
 					}
 
 					public void remove() {
@@ -275,6 +245,11 @@ public class GfWebService implements GfService {
 				};
 			}
 		};
+	}
+
+
+	public Iterable<String> generatePrefix(String from) {
+		return generatePrefix(null, null, from, null);
 	}
 
 
