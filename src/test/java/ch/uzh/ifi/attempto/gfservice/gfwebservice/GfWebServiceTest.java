@@ -60,6 +60,19 @@ public class GfWebServiceTest {
 
 	private static final String T_COMPLETE_1_OUT = "go five meters back";
 
+	private static final String T_COMPLETE_2_1_INPUT = "g";
+	private static final Set<String> T_COMPLETE_2_1_OUT_COMPLETIONS = mkSetString(new String[] { "go one", "go two", "go three", "go four", "go five" });
+	private static final String T_COMPLETE_2_2_INPUT = "go ";
+	private static final Set<String> T_COMPLETE_2_2_OUT_COMPLETIONS = mkSetString(new String[] { "one", "two", "three", "four", "five" });
+	private static final String T_COMPLETE_2_3_INPUT = "go o";
+	private static final Set<String> T_COMPLETE_2_3_OUT_COMPLETIONS = mkSetString(new String[] { "one meters forward", "one meters back" });
+	private static final String T_COMPLETE_2_4_INPUT = "go one meters ";
+	private static final Set<String> T_COMPLETE_2_4_OUT_COMPLETIONS = mkSetString(new String[] { "forward", "back" });
+	private static final String T_COMPLETE_2_5_INPUT = "go one meters b";
+	private static final Set<String> T_COMPLETE_2_5_OUT_COMPLETIONS = mkSetString(new String[] { "back" });
+	private static final String T_COMPLETE_2_6_INPUT = "go one meters back ";
+	private static final Set<String> T_COMPLETE_2_6_OUT_COMPLETIONS = Collections.EMPTY_SET;
+
 	private static final String T_TRANSLATE_1_CAT = T_PARSE_0_CAT;
 	private static final String T_TRANSLATE_1_INPUT = T_PARSE_0_INPUT;
 	private static final Set<String> T_TRANSLATE_1_OUT_TRANSLATIONS = new HashSet<String>(Arrays.asList(new String[] { "3" }));
@@ -252,6 +265,72 @@ public class GfWebServiceTest {
 
 
 	@Test
+	public void testComplete2_1() {
+		try {
+			GfServiceResultComplete result = GF_SERVICE.complete(null, T_COMPLETE_2_1_INPUT, FROM, null, null);
+			assertEquals(T_COMPLETE_2_1_OUT_COMPLETIONS, result.getCompletions(FROM));
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION);
+		}
+	}
+
+
+	@Test
+	public void testComplete2_2() {
+		try {
+			GfServiceResultComplete result = GF_SERVICE.complete(null, T_COMPLETE_2_2_INPUT, FROM, null, null);
+			assertEquals(T_COMPLETE_2_2_OUT_COMPLETIONS, result.getCompletions(FROM));
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION);
+		}
+	}
+
+
+	@Test
+	public void testComplete2_3() {
+		try {
+			GfServiceResultComplete result = GF_SERVICE.complete(null, T_COMPLETE_2_3_INPUT, FROM, null, null);
+			assertEquals(T_COMPLETE_2_3_OUT_COMPLETIONS, result.getCompletions(FROM));
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION);
+		}
+	}
+
+
+	@Test
+	public void testComplete2_4() {
+		try {
+			GfServiceResultComplete result = GF_SERVICE.complete(null, T_COMPLETE_2_4_INPUT, FROM, null, null);
+			assertEquals(T_COMPLETE_2_4_OUT_COMPLETIONS, result.getCompletions(FROM));
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION);
+		}
+	}
+
+
+	@Test
+	public void testComplete2_5() {
+		try {
+			GfServiceResultComplete result = GF_SERVICE.complete(null, T_COMPLETE_2_5_INPUT, FROM, null, null);
+			assertEquals(T_COMPLETE_2_5_OUT_COMPLETIONS, result.getCompletions(FROM));
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION);
+		}
+	}
+
+
+	@Test
+	public void testComplete2_6() {
+		try {
+			GfServiceResultComplete result = GF_SERVICE.complete(null, T_COMPLETE_2_6_INPUT, FROM, null, null);
+			assertEquals(T_COMPLETE_2_6_OUT_COMPLETIONS, result.getCompletions(FROM));
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION);
+		}
+	}
+
+
+	@Test
 	public void testAbstrtree() {
 		try {
 			GfServiceResultAbstrtree result = GF_SERVICE.abstrtree(T_LINEARIZE_1_TREE);
@@ -367,4 +446,8 @@ public class GfWebServiceTest {
 		}
 	}
 
+
+	private static Set<String> mkSetString(String[] array) {
+		return new HashSet<String>(Arrays.asList(array));
+	}
 }

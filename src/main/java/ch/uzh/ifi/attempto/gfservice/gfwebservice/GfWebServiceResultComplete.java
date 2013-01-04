@@ -2,6 +2,7 @@ package ch.uzh.ifi.attempto.gfservice.gfwebservice;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +27,12 @@ public class GfWebServiceResultComplete implements GfServiceResultComplete {
 
 	private final Map<String, Set<String>> map = new HashMap<String, Set<String>>();
 
+
+	public GfWebServiceResultComplete(String from, Set<String> completions) {
+		map.put(from, completions);
+	}
+
+
 	public GfWebServiceResultComplete(String jsonAsStr) throws IOException, ParseException {
 
 		Object obj = JSONValue.parseWithException(jsonAsStr);
@@ -40,5 +47,16 @@ public class GfWebServiceResultComplete implements GfServiceResultComplete {
 
 	public Set<String> getCompletions(String from) {
 		return map.get(from);
+	}
+
+	public void prefix(String from, String prefix) {
+		if (prefix == null || prefix.isEmpty()) {
+			return;
+		}
+		Set<String> newSet = new HashSet<String>();
+		for (String str : map.get(from)) {
+			newSet.add(prefix + str);
+		}
+		map.put(from, newSet);
 	}
 }

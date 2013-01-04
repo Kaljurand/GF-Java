@@ -4,11 +4,29 @@
   <groupId>ch.uzh.ifi.attempto.gfservice</groupId>
   <artifactId>gf-java</artifactId>
   <packaging>jar</packaging>
-  <version>0.8.0</version>
+  <version>0.8.1</version>
   <name>GF-Java</name>
   <description>
     Java front-end to a GF service, modeled after the GF Webservice / GF Cloud Service
   </description>
+  <url>https://github.com/Kaljurand/GF-Java/</url>
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/Kaljurand/GF-Java/issues</url>
+  </issueManagement>
+  <licenses>
+    <license>
+      <name>LGPL 3.0 license</name>
+      <url>http://www.opensource.org/licenses/lgpl-3.0.html</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Kaarel Kaljurand</name>
+      <email>kaljurand@gmail.com</email>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>

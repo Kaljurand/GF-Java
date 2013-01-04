@@ -3,12 +3,19 @@ package ch.uzh.ifi.attempto.gfservice.gfwebservice;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
+import java.util.Set;
 
+import ch.uzh.ifi.attempto.gfservice.Command;
+import ch.uzh.ifi.attempto.gfservice.GfService;
+import ch.uzh.ifi.attempto.gfservice.GfServiceException;
+import ch.uzh.ifi.attempto.gfservice.GfServiceResultComplete;
+import ch.uzh.ifi.attempto.gfservice.Param;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -18,11 +25,6 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.json.simple.parser.ParseException;
-
-import ch.uzh.ifi.attempto.gfservice.Command;
-import ch.uzh.ifi.attempto.gfservice.GfService;
-import ch.uzh.ifi.attempto.gfservice.GfServiceException;
-import ch.uzh.ifi.attempto.gfservice.Param;
 
 /**
  * @author Kaarel Kaljurand
@@ -129,6 +131,7 @@ public class GfWebService implements GfService {
 		}
 	}
 
+
 	public GfWebServiceResultComplete complete(String cat, String input, String from, Integer limit) throws GfServiceException {
 		Params p = new Params(Command.COMPLETE);
 		p.add(Param.CAT, cat);
@@ -143,6 +146,36 @@ public class GfWebService implements GfService {
 		} catch (ParseException e) {
 			throw new GfServiceException(e);
 		}
+	}
+
+
+	/**
+	 * The implementation calls complete/4.
+	 * TODO: it would be better (faster) if the webservice provided this functionality
+	 */
+	public GfServiceResultComplete complete(String cat, String input, String from, Integer limit, Integer length)
+			throws GfServiceException {
+		GfServiceResultComplete result = new GfWebServiceResultComplete(from, new HashSet<String>());
+		input = (input == null ? "" : input);
+		String initialPrefix = getInitialPrefix(input);
+		String prefix = initialPrefix;
+		while (length == null || length > 0) {
+			GfWebServiceResultComplete newResult = complete(cat, input, from, limit);
+			Set<String> completions = newResult.getCompletions(from);
+			if (completions.isEmpty()) {
+				break;
+			} else if (completions.size() > 1) {
+				newResult.prefix(from, prefix.substring(initialPrefix.length()));
+				return newResult;
+			}
+			result = newResult;
+			input = prefix + completions.iterator().next() + TOKEN_SEPARATOR;
+			prefix = input;
+			if (length != null) {
+				length--;
+			}
+		}
+		return result;
 	}
 
 
@@ -196,13 +229,7 @@ public class GfWebService implements GfService {
 	public Iterable<String> generatePrefix(final String cat, String input, final String from, final Integer limit) {
 		final Queue<String> nodes = new LinkedList<String>();
 		String initial = (input == null ? "" : input);
-		String prefix = "";
-		// If the initial input contains a token separator then we preserve it up to the last separator
-		// and use it as the prefix because the completer returns only the completed last token.
-		int lastIndex = initial.lastIndexOf(TOKEN_SEPARATOR);
-		if (lastIndex != -1) {
-			prefix = initial.substring(0, lastIndex + 1);
-		}
+		String prefix = getInitialPrefix(initial);
 		try {
 			GfWebServiceResultComplete complete = complete(cat, initial, from, limit);
 			for (String c : complete.getCompletions(from)) {
@@ -250,6 +277,19 @@ public class GfWebService implements GfService {
 
 	public Iterable<String> generatePrefix(String from) {
 		return generatePrefix(null, null, from, null);
+	}
+
+
+	/**
+	 * If the initial input contains a token separator then we preserve it up to the last separator
+	 * and use it as the prefix because the completer returns only the completed last token.
+	 */
+	private static String getInitialPrefix(String initial) {
+		int lastIndex = initial.lastIndexOf(TOKEN_SEPARATOR);
+		if (lastIndex == -1) {
+			return "";
+		}
+		return initial.substring(0, lastIndex + 1);
 	}
 
 

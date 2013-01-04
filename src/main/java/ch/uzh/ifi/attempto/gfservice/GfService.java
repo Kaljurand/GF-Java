@@ -97,6 +97,39 @@ public interface GfService {
 
 
 	/**
+	 * <p>Searches for the ambiguous completions of the given string.</p>
+	 * <p>Performs {@code length} number of steps before stopping.
+	 * If {@code length == null} then searches until the ambiguity or the end,
+	 * whichever comes first, but neither of which might come, so it is safer not to set {@code length = null}.</p>
+	 * <p>{@code limit} should be larger than 1 or {@code null}.</p>
+	 *
+	 * <p>For example, in a language</p>
+	 *
+	 * <pre>
+	 *     go (one | two | three | four | five) meters (forward | back)
+	 * </pre>
+	 *
+	 * <p>the following ambiguous completions occur:</p>
+	 *
+	 * <pre>
+	 *     "g" -> {"go one", "go two", ...}
+	 *     "go o" -> {"one meters forward", "one meters back"}
+	 *     "go one meters" -> {"forward", "back"}
+	 *     "go one meters b" -> {"back"}
+	 * </pre>
+	 *
+	 * @param cat start category for the parser ({@code null} = the default start category)
+	 * @param input incomplete string to be completed ({@code null = ""})
+	 * @param from language to use for parsing
+	 * @param limit maximal number of completions generated ({@code null} = all)
+	 * @param length maximal number of completion steps before ambiguity is reached ({@code null} = unlimited)
+	 * @return GfServiceResultComplete
+	 * @throws GfServiceException
+	 */
+	GfServiceResultComplete complete(String cat, String input, String from, Integer limit, Integer length) throws GfServiceException;
+
+
+	/**
 	 * <p>Returns the abstract tree diagram.</p>
 	 *
 	 * @param tree abstract syntax tree to be rendered

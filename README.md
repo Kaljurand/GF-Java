@@ -34,9 +34,13 @@ not been implemented.
 Building
 --------
 
-This includes testing against the locally running GF server.
+Testing against the locally running GF server.
 
-	$ mvn package
+	$ mvn test
+
+Building the jar-file.
+
+	$ mvn package -DskipTests
 
 Building the website
 
