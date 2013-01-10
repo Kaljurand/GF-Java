@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableSet;
 
 public class Constants {
 
-	public static final String WS_URL_LOCALHOST = "http://localhost:41296";
+	public static final String WS_URL_LOCALHOST = "http://localhost:41297";
 	public static final String WS_URL_CLOUD = "http://cloud.grammaticalframework.org";
 	public static final String GRAMMAR_DIR_CLOUD = "/tmp/gfse.74044909/";
 	public static final String GRAMMAR_DIR_LOCALHOST = "/grammars/";

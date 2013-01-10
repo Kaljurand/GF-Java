@@ -159,21 +159,19 @@ public class GfWebService implements GfService {
 		input = (input == null ? "" : input);
 		String initialPrefix = getInitialPrefix(input);
 		String prefix = initialPrefix;
-		while (length == null || length > 0) {
+		while (true) {
 			GfWebServiceResultComplete newResult = complete(cat, input, from, limit);
 			Set<String> completions = newResult.getCompletions(from);
 			if (completions.isEmpty()) {
+				// TODO: test this
 				break;
-			} else if (completions.size() > 1) {
+			} else if (completions.size() > 1 || length != null && --length <= 0) {
 				newResult.prefix(from, prefix.substring(initialPrefix.length()));
 				return newResult;
 			}
 			result = newResult;
 			input = prefix + completions.iterator().next() + TOKEN_SEPARATOR;
 			prefix = input;
-			if (length != null) {
-				length--;
-			}
 		}
 		return result;
 	}

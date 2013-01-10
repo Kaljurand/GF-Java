@@ -22,7 +22,7 @@ Documentation:
 
 Starting (requires GF version 2012-11-14 or newer):
 
-	$ GF_RESTRICTED=yes gf --server --document-root document-root
+	$ GF_RESTRICTED=yes gf --server=41297 --document-root document-root
 
 See usage examples in `tools/test_gfws.sh`.
 
