@@ -27,8 +27,13 @@ public class GfWebStorage implements GfStorage {
 	private static final String COMMAND = "command";
 	private static final String COMMAND_REMAKE = "remake";
 	private static final String COMMAND_UPLOAD = "upload";
+	private static final String COMMAND_LS = "ls";
+	private static final String COMMAND_RM = "rm";
+	private static final String COMMAND_DOWNLOAD = "download";
 	private static final String START_CAT = "--startcat";
 	private static final String OPTIMIZE_PGF = "--optimize-pgf";
+	private static final String FILE = "file";
+	private static final String EXT = "ext";
 
 	private final URI mUriNew;
 	private final URI mUriParse;
@@ -106,8 +111,8 @@ public class GfWebStorage implements GfStorage {
 
 
 	public GfWebStorageResult update(String dirName, String startCat, boolean optimize,
-			Iterable<String> moduleNames, GfModule... modules)
-					throws GfServiceException {
+									 Iterable<String> moduleNames, GfModule... modules)
+			throws GfServiceException {
 
 		try {
 			List<NameValuePair> pairs = makeParameters(COMMAND_REMAKE, dirName);
@@ -136,18 +141,56 @@ public class GfWebStorage implements GfStorage {
 
 	public void upload(String dirName, GfModule... modules) throws GfServiceException {
 		try {
-			DefaultHttpClient httpclient = new DefaultHttpClient();
 			HttpPost post = HttpUtils.getHttpPost(mUriCloud, makeParameters(COMMAND_UPLOAD, dirName, modules));
-			HttpResponse response = httpclient.execute(post);
+			HttpResponse response = new DefaultHttpClient().execute(post);
 
 			int statusCode = response.getStatusLine().getStatusCode();
 			// 204 = "No content"
+			// file upload produces no content, another status code indicates an error
 			if (statusCode != HttpStatus.SC_NO_CONTENT) {
 				throw new GfServiceException(statusCode + ": " + response.getStatusLine().getReasonPhrase());
 			}
 		} catch (IOException e) {
 			throw new GfServiceException(e);
 		}
+	}
+
+
+	public GfWebStorageResultLs ls(String dirName, String extension) throws GfServiceException {
+		List<NameValuePair> pairs = makeParameters(COMMAND_LS, dirName);
+		pairs.add(new BasicNameValuePair(EXT, extension));
+		try {
+			HttpPost post = HttpUtils.getHttpPost(mUriCloud, pairs);
+			return new GfWebStorageResultLs(HttpUtils.getHttpEntityAsString(new DefaultHttpClient(), post));
+		} catch (IOException e) {
+			throw new GfServiceException(e);
+		} catch (ParseException e) {
+			throw new GfServiceException(e);
+		}
+	}
+
+
+	public void rm(String dirName, String path) throws GfServiceException {
+		List<NameValuePair> pairs = makeParameters(COMMAND_RM, dirName);
+		pairs.add(new BasicNameValuePair(FILE, path));
+		try {
+			HttpPost post = HttpUtils.getHttpPost(mUriCloud, pairs);
+			HttpResponse response = new DefaultHttpClient().execute(post);
+
+			int statusCode = response.getStatusLine().getStatusCode();
+			// 404 = "File not found"
+			// 400 = "Bad request" (the server seems to send this in case of non existent files)
+			if (statusCode == HttpStatus.SC_NOT_FOUND || statusCode == HttpStatus.SC_BAD_REQUEST) {
+				throw new GfServiceException(statusCode + ": " + response.getStatusLine().getReasonPhrase());
+			}
+		} catch (IOException e) {
+			throw new GfServiceException(e);
+		}
+	}
+
+
+	public void download(String dirName, String path) throws GfServiceException {
+		// TODO
 	}
 
 

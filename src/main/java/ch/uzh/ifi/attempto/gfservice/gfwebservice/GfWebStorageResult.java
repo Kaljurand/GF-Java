@@ -55,4 +55,5 @@ public class GfWebStorageResult implements GfStorageResult {
 	public String toString() {
 		return mJo.toJSONString();
 	}
+
 }

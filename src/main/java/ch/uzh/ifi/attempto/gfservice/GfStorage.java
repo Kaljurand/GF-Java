@@ -84,7 +84,7 @@ public interface GfStorage {
 
 
 	/**
-	 * <p>Upload files to be stored in the cloud. Unsuccessful uploads (i.e. response
+	 * <p>Uploads files to be stored in the cloud. Unsuccessful attempts (i.e. response
 	 * code != 204) cause an exception to be thrown.</p>
 	 *
 	 * @param dirName name of the directory where the files are stored
@@ -92,5 +92,37 @@ public interface GfStorage {
 	 * @throws GfServiceException
 	 */
 	void upload(String dirName, GfModule... modules) throws GfServiceException;
+
+
+	/**
+	 * <p>Returns a list of names of the files in the given directory
+	 * matching the given filename extension.</p>
+	 *
+	 * @param dirName name of the directory where the files are stored
+	 * @param extension file extension (with the dot), e.g. ".gf"
+	 * @return result containing the list of matching filenames
+	 * @throws GfServiceException
+	 */
+	GfStorageResultLs ls(String dirName, String extension) throws GfServiceException;
+
+
+	/**
+	 * <p>Deletes a file with the given name in the given directory.</p>
+	 *
+	 * @param dirName name of the directory where the files are stored
+	 * @param path name of the file to be deletes
+	 * @throws GfServiceException
+	 */
+	void rm(String dirName, String path) throws GfServiceException;
+
+
+	/**
+	 * <p>Downloads a file with the given name in the given directory.</p>
+	 *
+	 * @param dirName name of the directory where the files are stored
+	 * @param path name of the file to be downloaded
+	 * @throws GfServiceException
+	 */
+	void download(String dirName, String path) throws GfServiceException;
 
 }

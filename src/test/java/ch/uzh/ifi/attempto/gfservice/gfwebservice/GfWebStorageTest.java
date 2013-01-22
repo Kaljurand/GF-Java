@@ -4,7 +4,11 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import org.junit.Test;
 
 import com.google.common.base.Charsets;
@@ -26,6 +30,7 @@ public class GfWebStorageTest {
 	private static GfModule GF_MODULE_GO_APP = null;
 	private static GfModule GF_MODULE_DUMMY_1 = null;
 	private static GfModule GF_MODULE_DUMMY_2 = null;
+	private static Set<String> FILENAMES;
 
 	static {
 		try {
@@ -37,6 +42,10 @@ public class GfWebStorageTest {
 			GF_MODULE_GO_APP = getGfModule("GoApp");
 			GF_MODULE_DUMMY_1 = new GfModule("Dummy1", "Dummy Content 1");
 			GF_MODULE_DUMMY_2 = new GfModule("Dummy2", "Dummy Content 2");
+			FILENAMES = ImmutableSet.of(
+					GF_MODULE_GO.getFilename(),
+					GF_MODULE_DUMMY_1.getFilename(),
+					GF_MODULE_DUMMY_2.getFilename());
 		} catch (IOException e) {
 			fail(Constants.MSG_PROGRAMMER_ERROR + ": " + e);
 		}
@@ -179,6 +188,49 @@ public class GfWebStorageTest {
 			fail(Constants.MSGY_GF_SERVICE_EXCEPTION);
 		} catch (GfServiceException e) {
 			TestUtils.show(e);
+		}
+	}
+
+
+	@Test
+	public void testStorageRm() {
+		try {
+			GF_WEB_STORAGE.upload(DIR_NAME, GF_MODULE_GO);
+			GF_WEB_STORAGE.rm(DIR_NAME, GF_MODULE_GO.getFilename());
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testStorageRmError() {
+		try {
+			GF_WEB_STORAGE.rm(DIR_NAME, Constants.NON_EXISTENT);
+			fail(Constants.MSGY_GF_SERVICE_EXCEPTION);
+		} catch (GfServiceException e) {
+			TestUtils.show(e);
+		}
+	}
+
+
+	@Test
+	public void testStorageLsRm() {
+		try {
+			// Get the current directory listing
+			GfWebStorageResultLs result = GF_WEB_STORAGE.ls(DIR_NAME, ".gf");
+			// Remove all the files
+			for (String filename : result.getFilenames()) {
+				GF_WEB_STORAGE.rm(DIR_NAME, filename);
+			}
+			// Upload some files
+			GF_WEB_STORAGE.upload(DIR_NAME, GF_MODULE_GO, GF_MODULE_DUMMY_1, GF_MODULE_DUMMY_2);
+			// Get a new listing
+			result = GF_WEB_STORAGE.ls(DIR_NAME, ".gf");
+			// Check if the listing matches the uploaded files
+			assertEquals(FILENAMES, result.getFilenames());
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}
 	}
 
