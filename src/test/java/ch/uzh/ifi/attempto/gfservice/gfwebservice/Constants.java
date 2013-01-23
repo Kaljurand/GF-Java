@@ -17,6 +17,7 @@ public class Constants {
 	public static final String MSG_URI_SYNTAX_EXCEPTION = "should NOT throw URISyntaxException";
 	public static final String MSG_GF_SERVICE_EXCEPTION = "should NOT throw GfServiceException";
 	public static final String MSGY_GF_SERVICE_EXCEPTION = "should throw GfServiceException";
+	public static final String MSG_IO_EXCEPTION = "should NOT throw IOException";
 	public static final String MSG_PROGRAMMER_ERROR = "programmer error";
 
 	public static final Set<String> EMPTY_STRING_SET = ImmutableSet.of();

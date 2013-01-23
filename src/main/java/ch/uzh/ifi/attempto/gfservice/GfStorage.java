@@ -1,5 +1,7 @@
 package ch.uzh.ifi.attempto.gfservice;
 
+import java.io.InputStream;
+
 /**
  * <p>Java front-end to the REST-based GF service storage API described in
  * <a href="http://cloud.grammaticalframework.org/gf-cloud-api.html">GF Cloud Service API (preliminary)</a>.</p>
@@ -121,8 +123,21 @@ public interface GfStorage {
 	 *
 	 * @param dirName name of the directory where the files are stored
 	 * @param path name of the file to be downloaded
+	 * @return downloaded content
 	 * @throws GfServiceException
 	 */
-	void download(String dirName, String path) throws GfServiceException;
+	InputStream download(String dirName, String path) throws GfServiceException;
+
+
+	/**
+	 * <p>Downloads a file with the given name in the given directory and returns
+	 * it as a string.</p>
+	 *
+	 * @param dirName name of the directory where the files are stored
+	 * @param path name of the file to be downloaded
+	 * @return downloaded content as a string
+	 * @throws GfServiceException
+	 */
+	String downloadAsString(String dirName, String path) throws GfServiceException;
 
 }

@@ -3,12 +3,13 @@ package ch.uzh.ifi.attempto.gfservice.gfwebservice;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
+import com.google.common.io.CharStreams;
 import org.junit.Test;
 
 import com.google.common.base.Charsets;
@@ -231,6 +232,49 @@ public class GfWebStorageTest {
 			assertEquals(FILENAMES, result.getFilenames());
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testStorageDownload() {
+		try {
+			// Upload a file
+			GF_WEB_STORAGE.upload(DIR_NAME, GF_MODULE_GO);
+			// Download this file
+			InputStream is = GF_WEB_STORAGE.download(DIR_NAME, GF_MODULE_GO.getFilename());
+			String downloadedContent = CharStreams.toString(new InputStreamReader(is, Charsets.UTF_8));
+			is.close();
+			assertEquals(GF_MODULE_GO.getContent(), downloadedContent);
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		} catch (IOException e) {
+			fail(Constants.MSG_IO_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testStorageDownloadAsString() {
+		try {
+			// Upload a file
+			GF_WEB_STORAGE.upload(DIR_NAME, GF_MODULE_GO);
+			// Download this file
+			String downloadedContent = GF_WEB_STORAGE.downloadAsString(DIR_NAME, GF_MODULE_GO.getFilename());
+			assertEquals(GF_MODULE_GO.getContent(), downloadedContent);
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testStorageDownloadError() {
+		try {
+			GF_WEB_STORAGE.download(DIR_NAME, Constants.NON_EXISTENT);
+			fail(Constants.MSGY_GF_SERVICE_EXCEPTION);
+		} catch (GfServiceException e) {
+			TestUtils.show(e);
 		}
 	}
 

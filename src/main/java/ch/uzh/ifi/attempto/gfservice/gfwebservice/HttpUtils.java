@@ -35,6 +35,11 @@ public class HttpUtils {
 	}
 
 
+	public static String getHttpEntityAsString(HttpUriRequest httpRequest) throws GfServiceException {
+		return getHttpEntityAsString(new DefaultHttpClient(), httpRequest);
+	}
+
+
 	public static String getHttpEntityAsString(DefaultHttpClient httpClient, HttpUriRequest httpRequest) throws GfServiceException {
 		try {
 			HttpEntity entity = getHttpEntity(httpClient, httpRequest);
@@ -67,6 +72,11 @@ public class HttpUtils {
 	}
 
 
+	public static HttpEntity getHttpEntity(HttpUriRequest httpRequest) throws GfServiceException, IOException {
+		return getHttpEntity(new DefaultHttpClient(), httpRequest);
+	}
+
+
 	/**
 	 * <p>Executes the given request and returns the response entity.</p>
 	 *
@@ -82,12 +92,11 @@ public class HttpUtils {
 	 * @param httpclient HTTP client
 	 * @param httpRequest HTTP request
 	 * @return response entity
-	 * @throws ClientProtocolException
 	 * @throws IOException
 	 * @throws GfServiceException
 	 */
 	private static HttpEntity getHttpEntity(DefaultHttpClient httpclient, HttpUriRequest httpRequest)
-			throws ClientProtocolException, IOException, GfServiceException {
+			throws IOException, GfServiceException {
 		HttpResponse response = httpclient.execute(httpRequest);
 
 		int statusCode = response.getStatusLine().getStatusCode();

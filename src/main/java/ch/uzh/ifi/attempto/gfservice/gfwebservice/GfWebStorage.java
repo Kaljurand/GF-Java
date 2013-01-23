@@ -1,6 +1,7 @@
 package ch.uzh.ifi.attempto.gfservice.gfwebservice;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -189,8 +190,22 @@ public class GfWebStorage implements GfStorage {
 	}
 
 
-	public void download(String dirName, String path) throws GfServiceException {
-		// TODO
+	public InputStream download(String dirName, String path) throws GfServiceException {
+		List<NameValuePair> pairs = makeParameters(COMMAND_DOWNLOAD, dirName);
+		pairs.add(new BasicNameValuePair(FILE, path));
+		try {
+			HttpPost post = HttpUtils.getHttpPost(mUriCloud, pairs);
+			return HttpUtils.getHttpEntity(post).getContent();
+		} catch (IOException e) {
+			throw new GfServiceException(e);
+		}
+	}
+
+
+	public String downloadAsString(String dirName, String path) throws GfServiceException {
+		List<NameValuePair> pairs = makeParameters(COMMAND_DOWNLOAD, dirName);
+		pairs.add(new BasicNameValuePair(FILE, path));
+		return HttpUtils.getHttpEntityAsString(HttpUtils.getHttpPost(mUriCloud, pairs));
 	}
 
 
