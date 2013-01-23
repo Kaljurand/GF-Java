@@ -176,14 +176,7 @@ public class GfWebStorage implements GfStorage {
 		pairs.add(new BasicNameValuePair(FILE, path));
 		try {
 			HttpPost post = HttpUtils.getHttpPost(mUriCloud, pairs);
-			HttpResponse response = new DefaultHttpClient().execute(post);
-
-			int statusCode = response.getStatusLine().getStatusCode();
-			// 404 = "File not found"
-			// 400 = "Bad request" (the server seems to send this in case of non existent files)
-			if (statusCode == HttpStatus.SC_NOT_FOUND || statusCode == HttpStatus.SC_BAD_REQUEST) {
-				throw new GfServiceException(statusCode + ": " + response.getStatusLine().getReasonPhrase());
-			}
+			HttpUtils.getHttpEntity(post);
 		} catch (IOException e) {
 			throw new GfServiceException(e);
 		}

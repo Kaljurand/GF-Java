@@ -28,6 +28,7 @@ public class GfTreeTest {
 	private static final String T8_TREE = "(() (())) (a) ()";
 	private static final String T9_TREE = "))";
 	private static final String T10_TREE = " a  ((b)\tb\nc) ";
+	private static final String T11_TREE = "(a b) c"; // TODO: should we support trees of this form?
 
 	@Test
 	public void testError1() {
@@ -96,6 +97,10 @@ public class GfTreeTest {
 		testGfTree(T10_TREE, "a ((b) b c)");
 	}
 
+	@Test
+	public void testGfTree11() {
+		testGfTree(T11_TREE);
+	}
 
 	private GfTree testGfTree(String treeAsStr) {
 		GfTree tree = null;

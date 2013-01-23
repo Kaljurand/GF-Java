@@ -203,6 +203,23 @@ public class GfWebStorageTest {
 		}
 	}
 
+	@Test
+	public void testStorageRm1() {
+		try {
+			// Upload 2 files
+			GF_WEB_STORAGE.upload(DIR_NAME, GF_MODULE_GO, GF_MODULE_DUMMY_1);
+			// Delete 1 file
+			GF_WEB_STORAGE.rm(DIR_NAME, GF_MODULE_GO.getFilename());
+			// Get a list of files
+			GfWebStorageResultLs result = GF_WEB_STORAGE.ls(DIR_NAME, ".gf");
+			// Check if this list lacks the deleted file
+			assertFalse(result.getFilenames().contains(GF_MODULE_GO.getFilename()));
+			assertTrue(result.getFilenames().contains(GF_MODULE_DUMMY_1.getFilename()));
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
 
 	@Test
 	public void testStorageRmError() {
