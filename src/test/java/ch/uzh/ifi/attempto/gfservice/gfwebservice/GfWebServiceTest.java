@@ -12,6 +12,10 @@ import java.util.Map;
 import java.util.Set;
 
 import ch.uzh.ifi.attempto.gfservice.DiagramFormat;
+import ch.uzh.ifi.attempto.gfservice.GfServiceResultLinearizeAll;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimaps;
 import org.junit.Test;
 
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
@@ -55,6 +59,11 @@ public class GfWebServiceTest {
 	private static final Set<String> T_LINEARIZE_1_OUT_TEXTS = new HashSet<String>(Arrays.asList(new String[] { "3" }));
 
 	private static final Map<String, Set<String>> T_LINEARIZE_2_OUT = new HashMap<String, Set<String>>();
+
+	private static final ImmutableMap T_LINEARIZE_ALL_OUT = ImmutableMap.of(
+			"GoEst", ImmutableSet.of("yks", "üks"),
+			"GoApp", ImmutableSet.of("1"),
+			"GoEng", ImmutableSet.of("one"));
 
 	private static final String T_COMPLETE_0_INPUT = "go t";
 	private static final Set<String> T_COMPLETE_0_OUT_COMPLETIONS = new HashSet<String>(Arrays.asList(new String[] { "three", "two" }));
@@ -187,6 +196,17 @@ public class GfWebServiceTest {
 			fail(Constants.MSGY_GF_SERVICE_EXCEPTION);
 		} catch (GfServiceException e) {
 			assertEquals("-", e.getMessage());
+		}
+	}
+
+
+	@Test
+	public void testLinearizeAll() {
+		try {
+			GfServiceResultLinearizeAll result = GF_SERVICE.linearizeAll("n1", null);
+			assertEquals(T_LINEARIZE_ALL_OUT, result.getTexts());
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION);
 		}
 	}
 

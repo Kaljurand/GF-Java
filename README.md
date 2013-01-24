@@ -19,6 +19,7 @@ Documentation:
 
   - http://code.google.com/p/grammatical-framework/wiki/GFWebServiceAPI
   - http://cloud.grammaticalframework.org/gf-cloud-api.html
+  - http://github.com/GrammaticalFramework/GF/blob/master/src/server/PGFService.hs
 
 Starting (requires GF version 2012-11-14 or newer):
 

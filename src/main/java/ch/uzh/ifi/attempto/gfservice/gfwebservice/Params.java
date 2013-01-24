@@ -15,7 +15,7 @@ public class Params {
 	private final List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 
 	public Params(Command command) {
-		add(Param.COMMAND, command.toString().toLowerCase());
+		add(Param.COMMAND, command.getCommand());
 	}
 
 

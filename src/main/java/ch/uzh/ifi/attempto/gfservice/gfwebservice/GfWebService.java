@@ -79,15 +79,21 @@ public class GfWebService implements GfService {
 
 
 	public GfWebServiceResultLinearize linearize(String tree, String to) throws GfServiceException {
-		if (tree == null) {
-			throw new IllegalArgumentException("Tree MUST be given");
-		}
-		Params p = new Params(Command.LINEARIZE);
-		p.add(Param.TREE, tree);
-		p.add(Param.TO, to);
-		String response = getResponseAsString(p.get());
+		String response = getLinearizeResponse(Command.LINEARIZE, tree, to);
 		try {
 			return new GfWebServiceResultLinearize(response);
+		} catch (IOException e) {
+			throw new GfServiceException(e);
+		} catch (ParseException e) {
+			throw new GfServiceException(e);
+		}
+	}
+
+
+	public GfWebServiceResultLinearizeAll linearizeAll(String tree, String to) throws GfServiceException {
+		String response = getLinearizeResponse(Command.LINEARIZE_ALL, tree, to);
+		try {
+			return new GfWebServiceResultLinearizeAll(response);
 		} catch (IOException e) {
 			throw new GfServiceException(e);
 		} catch (ParseException e) {
@@ -351,5 +357,16 @@ public class GfWebService implements GfService {
 		p.add(Param.TREE, tree);
 		p.add(Param.FORMAT, format.toString().toLowerCase());
 		return getResponseAsBytes(p.get());
+	}
+
+
+	private String getLinearizeResponse(Command command, String tree, String to) throws GfServiceException {
+		if (tree == null) {
+			throw new IllegalArgumentException("Tree MUST be given");
+		}
+		Params p = new Params(command);
+		p.add(Param.TREE, tree);
+		p.add(Param.TO, to);
+		return getResponseAsString(p.get());
 	}
 }

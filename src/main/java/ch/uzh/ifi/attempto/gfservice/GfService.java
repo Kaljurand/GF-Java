@@ -51,6 +51,12 @@ public interface GfService {
 
 
 	/**
+	 * <p>Linearizes the given abstract syntax tree into strings in the given language(s).</p>
+	 */
+	GfServiceResultLinearizeAll linearizeAll(@NotNull String tree, String to) throws GfServiceException;
+
+
+	/**
 	 * <p>Translates the given string from the given source language into the given target language.</p>
 	 *
 	 * <p>The translation is a two step process.

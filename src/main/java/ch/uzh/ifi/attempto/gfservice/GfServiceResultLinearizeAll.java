@@ -3,11 +3,10 @@ package ch.uzh.ifi.attempto.gfservice;
 import java.util.Map;
 import java.util.Set;
 
-// TODO: this should return a single string, not a set
-public interface GfServiceResultLinearize extends GfResult {
+public interface GfServiceResultLinearizeAll extends GfResult {
 
 	/**
-	 * <p>SHOULD never return <code>null</code>.</p>
+	 * <p>SHOULD never return {@code null}.</p>
 	 *
 	 * @param to concrete language
 	 * @return set of linearizations in the given language
@@ -16,7 +15,7 @@ public interface GfServiceResultLinearize extends GfResult {
 
 
 	/**
-	 * <p>SHOULD never return <code>null</code>.</p>
+	 * <p>SHOULD never return {@code null}.</p>
 	 *
 	 * @return set of language-linearizations pairs
 	 */

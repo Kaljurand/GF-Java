@@ -54,8 +54,8 @@ public class JsonUtils {
 	 * <p>Converts a JSONArray of JSON objects into a multimap of strings.</p>
 	 *
 	 * @param jsonArray JSON array
-	 * @param keyName name of the JSON field whose value to be used as the map key
-	 * @param valName name of the JSON field whose value to be put in the map value (set)
+	 * @param keyName   name of the JSON field whose value to be used as the map key
+	 * @param valName   name of the JSON field whose value to be put in the map value (set)
 	 * @return map from Strings to Sets of Strings
 	 */
 	public static Map<String, Set<String>> makeMultimapSetFromJsonArray(JSONArray jsonArray, String keyName, String valName) {
@@ -66,15 +66,24 @@ public class JsonUtils {
 		for (Object o : jsonArray) {
 			JSONObject jo = (JSONObject) o;
 
+			// We assume that the key is a string
 			String key = jo.get(keyName).toString();
-			String val = jo.get(valName).toString();
 
-			if (map.containsKey(key)) {
-				map.get(key).add(val);
+			Set<String> set = map.get(key);
+			if (set == null) {
+				set = new HashSet<String>();
+				map.put(key, set);
+			}
+
+			// If the value is an array then we add all the elements of this array,
+			// otherwise we just add the serialization of the object (which we expect
+			// to be a String.
+			Object val = jo.get(valName);
+
+			if (val instanceof JSONArray) {
+				set.addAll((JSONArray) val);
 			} else {
-				Set<String> list = new HashSet<String>();
-				list.add(val);
-				map.put(key, list);
+				set.add(val.toString());
 			}
 		}
 		return map;
