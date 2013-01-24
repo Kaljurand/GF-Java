@@ -12,6 +12,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import ch.uzh.ifi.attempto.gfservice.Command;
+import ch.uzh.ifi.attempto.gfservice.DiagramFormat;
 import ch.uzh.ifi.attempto.gfservice.GfService;
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultComplete;
@@ -177,13 +178,17 @@ public class GfWebService implements GfService {
 	}
 
 
+	public GfWebServiceResultAbstrtree abstrtree(String tree, DiagramFormat format) throws GfServiceException {
+		byte[] response = getDiagram(tree, Command.ABSTRTREE, format);
+		return new GfWebServiceResultAbstrtree(response, format);
+	}
+
 	public GfWebServiceResultAbstrtree abstrtree(String tree) throws GfServiceException {
-		byte[] response = getDiagram(tree, Command.ABSTRTREE);
-		return new GfWebServiceResultAbstrtree(response);
+		return abstrtree(tree, DiagramFormat.DEFAULT);
 	}
 
 
-	public GfWebServiceResultParsetree parsetree(String tree, String from) throws GfServiceException {
+	public GfWebServiceResultParsetree parsetree(String tree, String from, DiagramFormat format) throws GfServiceException {
 		if (tree == null) {
 			throw new IllegalArgumentException("Tree MUST be given");
 		}
@@ -193,13 +198,23 @@ public class GfWebService implements GfService {
 		Params p = new Params(Command.PARSETREE);
 		p.add(Param.TREE, tree);
 		p.add(Param.FROM, from);
-		return new GfWebServiceResultParsetree(getResponseAsBytes(p.get()));
+		p.add(Param.FORMAT, format.toString().toLowerCase());
+		return new GfWebServiceResultParsetree(getResponseAsBytes(p.get()), format);
+	}
+
+	public GfWebServiceResultParsetree parsetree(String tree, String from) throws GfServiceException {
+		return parsetree(tree, from, DiagramFormat.DEFAULT);
+	}
+
+
+	public GfWebServiceResultAlignment alignment(String tree, DiagramFormat format) throws GfServiceException {
+		byte[] response = getDiagram(tree, Command.ALIGNMENT, format);
+		return new GfWebServiceResultAlignment(response, format);
 	}
 
 
 	public GfWebServiceResultAlignment alignment(String tree) throws GfServiceException {
-		byte[] response = getDiagram(tree, Command.ALIGNMENT);
-		return new GfWebServiceResultAlignment(response);
+		return alignment(tree, DiagramFormat.DEFAULT);
 	}
 
 
@@ -328,12 +343,13 @@ public class GfWebService implements GfService {
 	}
 
 
-	private byte[] getDiagram(String tree, Command command) throws GfServiceException {
+	private byte[] getDiagram(String tree, Command command, DiagramFormat format) throws GfServiceException {
 		if (tree == null) {
 			throw new IllegalArgumentException("Tree MUST be given");
 		}
 		Params p = new Params(command);
 		p.add(Param.TREE, tree);
+		p.add(Param.FORMAT, format.toString().toLowerCase());
 		return getResponseAsBytes(p.get());
 	}
 }

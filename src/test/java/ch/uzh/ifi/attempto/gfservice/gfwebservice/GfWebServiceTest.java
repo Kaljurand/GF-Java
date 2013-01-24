@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ch.uzh.ifi.attempto.gfservice.DiagramFormat;
 import org.junit.Test;
 
 import ch.uzh.ifi.attempto.gfservice.GfServiceException;
@@ -345,7 +346,7 @@ public class GfWebServiceTest {
 	@Test
 	public void testAbstrtree() {
 		try {
-			GfServiceResultAbstrtree result = GF_SERVICE.abstrtree(T_LINEARIZE_1_TREE);
+			GfServiceResultAbstrtree result = GF_SERVICE.abstrtree(T_LINEARIZE_1_TREE, DiagramFormat.PNG);
 			//System.out.println("<img src=\"" + result.getDataUri() + "\">");
 			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
 					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
@@ -358,7 +359,7 @@ public class GfWebServiceTest {
 	@Test
 	public void testAbstrtree1() {
 		try {
-			GfServiceResultAbstrtree result = GF_SERVICE.abstrtree(UNPARSABLE_STRING);
+			GfServiceResultAbstrtree result = GF_SERVICE.abstrtree(UNPARSABLE_STRING, DiagramFormat.PNG);
 			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
 					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
 			fail(Constants.MSGY_GF_SERVICE_EXCEPTION);
@@ -369,9 +370,22 @@ public class GfWebServiceTest {
 
 
 	@Test
+	public void testAbstrtree2() {
+		try {
+			GfServiceResultAbstrtree resultPng = GF_SERVICE.abstrtree(T_LINEARIZE_1_TREE, DiagramFormat.PNG);
+			GfServiceResultAbstrtree resultSvg = GF_SERVICE.abstrtree(T_LINEARIZE_1_TREE);
+			//fail(resultPng.getDataUri().length() + " " + resultSvg.getDataUri().length());
+			assertTrue(resultPng.getDataUri().length() > 1.5 * resultSvg.getDataUri().length());
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
 	public void testParsetree() {
 		try {
-			GfServiceResultParsetree result = GF_SERVICE.parsetree(T_LINEARIZE_1_TREE, FROM);
+			GfServiceResultParsetree result = GF_SERVICE.parsetree(T_LINEARIZE_1_TREE, FROM, DiagramFormat.PNG);
 			//System.out.println("<img src=\"" + result.getDataUri() + "\">");
 			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
 					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));
@@ -384,7 +398,7 @@ public class GfWebServiceTest {
 	@Test
 	public void testAlignment() {
 		try {
-			GfServiceResultAlignment result = GF_SERVICE.alignment(T_LINEARIZE_1_TREE);
+			GfServiceResultAlignment result = GF_SERVICE.alignment(T_LINEARIZE_1_TREE, DiagramFormat.PNG);
 			//System.out.println("<img src=\"" + result.getDataUri() + "\">");
 			assertEquals(T_ALIGNMENT_0_OUT_DATAURI_PREFIX,
 					result.getDataUri().substring(0, T_ALIGNMENT_0_OUT_DATAURI_PREFIX.length()));

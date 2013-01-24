@@ -133,9 +133,11 @@ public interface GfService {
 	 * <p>Returns the abstract tree diagram.</p>
 	 *
 	 * @param tree abstract syntax tree to be rendered
+	 * @param format format of the diagram (png, svg, gv, gif)
 	 * @return GfServiceResultAbstrtree
 	 * @throws GfServiceException
 	 */
+	GfServiceResultAbstrtree abstrtree(@NotNull String tree, @NotNull DiagramFormat format) throws GfServiceException;
 	GfServiceResultAbstrtree abstrtree(@NotNull String tree) throws GfServiceException;
 
 
@@ -144,9 +146,11 @@ public interface GfService {
 	 *
 	 * @param tree abstract syntax tree to be rendered
 	 * @param from language to be used in the rendering
+	 * @param format format of the diagram (png, svg, gv, gif)
 	 * @return GfServiceResultParsetree
 	 * @throws GfServiceException
 	 */
+	GfServiceResultParsetree parsetree(@NotNull String tree, @NotNull String from, @NotNull DiagramFormat format) throws GfServiceException;
 	GfServiceResultParsetree parsetree(@NotNull String tree, @NotNull String from) throws GfServiceException;
 
 
@@ -154,9 +158,11 @@ public interface GfService {
 	 * <p>Returns the word alignment diagram.</p>
 	 *
 	 * @param tree abstract syntax tree to be rendered
+	 * @param format format of the diagram (png, svg, gv, gif)
 	 * @return GfServiceResultAlignment
 	 * @throws GfServiceException
 	 */
+	GfServiceResultAlignment alignment(@NotNull String tree, @NotNull DiagramFormat format) throws GfServiceException;
 	GfServiceResultAlignment alignment(@NotNull String tree) throws GfServiceException;
 
 
