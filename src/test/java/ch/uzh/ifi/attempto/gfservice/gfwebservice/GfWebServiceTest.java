@@ -40,53 +40,57 @@ public class GfWebServiceTest {
 	private static final String STARTCAT = NAME;
 	private static final String FROM = "GoEng";
 	private static final String TO = "GoApp";
-	private static final Set<String> CATEGORIES = new HashSet<String>(Arrays.asList(new String[] {
-			"Float", "String", "Number", "Go", "Int", "Unit", "Direction" }));
-	private static final Set<String> FUNCTIONS = new HashSet<String>(Arrays.asList(new String[] {
-			"n1", "n2", "n3", "n4", "n5", "go", "meter", "forward", "back" }));
-	private static final Set<String> LANGUAGES = new HashSet<String>(Arrays.asList(new String[] { "GoEst", "GoApp", "GoEng" }));
+	private static final Set<String> CATEGORIES = ImmutableSet.of(
+			"Float", "String", "Number", "Go", "Int", "Unit", "Direction");
+	private static final Set<String> FUNCTIONS = ImmutableSet.of(
+			"n1", "n2", "n3", "n4", "n5", "go", "meter", "forward", "back");
+	private static final Set<String> LANGUAGES = ImmutableSet.of("GoEst", "GoApp", "GoEng");
 
-	private static final Set<String> T_BROWSE_0_PRODUCERS = new HashSet<String>(Arrays.asList(new String[] { "go" }));
-	private static final Set<String> T_BROWSE_0_CONSUMERS = new HashSet<String>(Arrays.asList(new String[] { }));
+	private static final Set<String> T_BROWSE_0_PRODUCERS = ImmutableSet.of("go");
+	private static final Set<String> T_BROWSE_0_CONSUMERS = ImmutableSet.of();
 
 	private static final String UNPARSABLE_STRING = "adkasdasdasda;slqwe0otkfef0sfs d ada-sdasd";
 
 	private static final String T_PARSE_0_CAT = "Number";
 	private static final String T_PARSE_0_INPUT = "three";
-	private static final Set<String> T_PARSE_0_OUT_TREES = new HashSet<String>(Arrays.asList(new String[] { "n3" }));
+	private static final Set<String> T_PARSE_0_OUT_TREES = ImmutableSet.of("n3");
 
 	private static final String T_LINEARIZE_1_TREE = "n3";
-	private static final Set<String> T_LINEARIZE_1_OUT_TEXTS = new HashSet<String>(Arrays.asList(new String[] { "3" }));
+	private static final Set<String> T_LINEARIZE_1_OUT_TEXTS = ImmutableSet.of("3");
 
-	private static final Map<String, Set<String>> T_LINEARIZE_2_OUT = new HashMap<String, Set<String>>();
+	private static final String T_LINEARIZE_2_TREE = "n1";
+	private static final ImmutableMap T_LINEARIZE_2_OUT = ImmutableMap.of(
+			"GoEst", ImmutableSet.of("üks"),
+			"GoEng", ImmutableSet.of("one"),
+			"GoApp", ImmutableSet.of("1"));
 
-	private static final ImmutableMap T_LINEARIZE_ALL_OUT = ImmutableMap.of(
+	private static final ImmutableMap T_LINEARIZE_ALL_2_OUT = ImmutableMap.of(
 			"GoEst", ImmutableSet.of("yks", "üks"),
 			"GoApp", ImmutableSet.of("1"),
 			"GoEng", ImmutableSet.of("one"));
 
 	private static final String T_COMPLETE_0_INPUT = "go t";
-	private static final Set<String> T_COMPLETE_0_OUT_COMPLETIONS = new HashSet<String>(Arrays.asList(new String[] { "three", "two" }));
+	private static final Set<String> T_COMPLETE_0_OUT_COMPLETIONS = ImmutableSet.of("three", "two");
 
 	private static final String T_COMPLETE_1_OUT = "go five meters back";
 
 	private static final String T_COMPLETE_2_1_INPUT = "g";
-	private static final Set<String> T_COMPLETE_2_1_OUT_COMPLETIONS = mkSetString(new String[] { "go one", "go two", "go three", "go four", "go five" });
+	private static final Set<String> T_COMPLETE_2_1_OUT_COMPLETIONS = ImmutableSet.of("go one", "go two", "go three", "go four", "go five");
 	private static final String T_COMPLETE_2_2_INPUT = "go ";
-	private static final Set<String> T_COMPLETE_2_2_OUT_COMPLETIONS = mkSetString(new String[] { "one", "two", "three", "four", "five" });
+	private static final Set<String> T_COMPLETE_2_2_OUT_COMPLETIONS = ImmutableSet.of("one", "two", "three", "four", "five");
 	private static final String T_COMPLETE_2_3_INPUT = "go o";
-	private static final Set<String> T_COMPLETE_2_3_OUT_COMPLETIONS = mkSetString(new String[] { "one meters forward", "one meters back" });
-	private static final Set<String> T_COMPLETE_2_3_1_OUT_COMPLETIONS = mkSetString(new String[] { "one meters" });
+	private static final Set<String> T_COMPLETE_2_3_OUT_COMPLETIONS = ImmutableSet.of("one meters forward", "one meters back");
+	private static final Set<String> T_COMPLETE_2_3_1_OUT_COMPLETIONS = ImmutableSet.of("one meters");
 	private static final String T_COMPLETE_2_4_INPUT = "go one meters ";
-	private static final Set<String> T_COMPLETE_2_4_OUT_COMPLETIONS = mkSetString(new String[] { "forward", "back" });
+	private static final Set<String> T_COMPLETE_2_4_OUT_COMPLETIONS = ImmutableSet.of("forward", "back");
 	private static final String T_COMPLETE_2_5_INPUT = "go one meters b";
-	private static final Set<String> T_COMPLETE_2_5_OUT_COMPLETIONS = mkSetString(new String[] { "back" });
+	private static final Set<String> T_COMPLETE_2_5_OUT_COMPLETIONS = ImmutableSet.of("back");
 	private static final String T_COMPLETE_2_6_INPUT = "go one meters back ";
-	private static final Set<String> T_COMPLETE_2_6_OUT_COMPLETIONS = Collections.EMPTY_SET;
+	private static final Set<String> T_COMPLETE_2_6_OUT_COMPLETIONS = ImmutableSet.of();
 
 	private static final String T_TRANSLATE_1_CAT = T_PARSE_0_CAT;
 	private static final String T_TRANSLATE_1_INPUT = T_PARSE_0_INPUT;
-	private static final Set<String> T_TRANSLATE_1_OUT_TRANSLATIONS = new HashSet<String>(Arrays.asList(new String[] { "3" }));
+	private static final Set<String> T_TRANSLATE_1_OUT_TRANSLATIONS = ImmutableSet.of("3");
 
 	private static final String T_ALIGNMENT_0_OUT_DATAURI_PREFIX = "data:image/png;base64,";
 
@@ -99,10 +103,6 @@ public class GfWebServiceTest {
 
 	static {
 		GF_SERVICE = new GfWebService(Constants.WS_URI, Constants.GRAMMAR_DIR_LOCALHOST + GRAMMAR_PGF);
-
-		T_LINEARIZE_2_OUT.put("GoEst", new HashSet<String>(Arrays.asList(new String[] { "kolm" })));
-		T_LINEARIZE_2_OUT.put("GoEng", new HashSet<String>(Arrays.asList(new String[] { "three" })));
-		T_LINEARIZE_2_OUT.put("GoApp", new HashSet<String>(Arrays.asList(new String[] { "3" })));
 	}
 
 
@@ -181,7 +181,7 @@ public class GfWebServiceTest {
 	@Test
 	public void testLinearize2() {
 		try {
-			GfServiceResultLinearize result = GF_SERVICE.linearize(T_LINEARIZE_1_TREE, null);
+			GfServiceResultLinearize result = GF_SERVICE.linearize(T_LINEARIZE_2_TREE, null);
 			assertEquals(T_LINEARIZE_2_OUT, result.getTexts());
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION);
@@ -203,8 +203,8 @@ public class GfWebServiceTest {
 	@Test
 	public void testLinearizeAll() {
 		try {
-			GfServiceResultLinearizeAll result = GF_SERVICE.linearizeAll("n1", null);
-			assertEquals(T_LINEARIZE_ALL_OUT, result.getTexts());
+			GfServiceResultLinearizeAll result = GF_SERVICE.linearizeAll(T_LINEARIZE_2_TREE, null);
+			assertEquals(T_LINEARIZE_ALL_2_OUT, result.getTexts());
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION);
 		}
@@ -490,10 +490,5 @@ public class GfWebServiceTest {
 		} catch (RuntimeException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}
-	}
-
-
-	private static Set<String> mkSetString(String[] array) {
-		return new HashSet<String>(Arrays.asList(array));
 	}
 }
