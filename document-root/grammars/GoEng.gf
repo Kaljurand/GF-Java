@@ -1,5 +1,8 @@
 concrete GoEng of Go = {
 
+	printname cat Direction = "direction" ;
+	printname fun n1 = "one" ;
+
 	lincat Go, Number, Unit, Direction = {s : Str} ;
 
 	lin

@@ -239,6 +239,21 @@ public class GfWebService implements GfService {
 	}
 
 
+	public GfWebServiceResultBrowseAll browseAll() throws GfServiceException {
+		Params p = new Params(Command.BROWSE);
+		p.add(Param.FORMAT, "json");
+		p.add(Param.PRINTNAMES, "1");
+		String response = getResponseAsString(p.get());
+		try {
+			return new GfWebServiceResultBrowseAll(response);
+		} catch (IOException e) {
+			throw new GfServiceException(e);
+		} catch (ParseException e) {
+			throw new GfServiceException(e);
+		}
+	}
+
+
 	/**
 	 * This is breadth-first search (using a queue) over completions.
 	 * Note that the GfServiceException is not thrown here.

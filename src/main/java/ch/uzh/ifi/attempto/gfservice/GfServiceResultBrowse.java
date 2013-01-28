@@ -10,7 +10,7 @@ public interface GfServiceResultBrowse extends GfResult {
 	Set<String> getProducers();
 
 	/**
-	 * @return set of category names
+	 * @return set of function names
 	 */
 	Set<String> getConsumers();
 

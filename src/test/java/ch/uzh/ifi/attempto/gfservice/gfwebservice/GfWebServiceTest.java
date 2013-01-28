@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import ch.uzh.ifi.attempto.gfservice.DiagramFormat;
+import ch.uzh.ifi.attempto.gfservice.GfServiceResultBrowseAll;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultLinearizeAll;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -434,6 +435,31 @@ public class GfWebServiceTest {
 			GfServiceResultBrowse result = GF_SERVICE.browse(STARTCAT);
 			assertEquals(T_BROWSE_0_PRODUCERS, result.getProducers());
 			assertEquals(T_BROWSE_0_CONSUMERS, result.getConsumers());
+		} catch (GfServiceException e) {
+			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
+		}
+	}
+
+
+	@Test
+	public void testBrowseAll() {
+		try {
+			GfServiceResultBrowseAll result = GF_SERVICE.browseAll();
+			// Functions
+			assertEquals(FUNCTIONS, result.getFunctions());
+			assertEquals("fun go : Number -> Unit -> Direction -> Go", result.getFunctionDef("go"));
+			assertEquals("number üks", result.getFunctionName("n1", "GoEst"));
+			assertEquals("one", result.getFunctionName("n1", "GoEng"));
+
+			// Categories
+			assertEquals(CATEGORIES, result.getCategories());
+			assertEquals("cat Direction", result.getCategoryDef("Direction"));
+			assertEquals("suund", result.getCategoryName("Direction", "GoEst"));
+			assertEquals("direction", result.getCategoryName("Direction", "GoEng"));
+			assertEquals(T_BROWSE_0_PRODUCERS, result.getProducers(STARTCAT));
+			assertEquals(T_BROWSE_0_CONSUMERS, result.getConsumers(STARTCAT));
+
+			assertNull(result.getCategoryName(Constants.NON_EXISTENT, Constants.NON_EXISTENT));
 		} catch (GfServiceException e) {
 			fail(Constants.MSG_GF_SERVICE_EXCEPTION + ": " + e);
 		}

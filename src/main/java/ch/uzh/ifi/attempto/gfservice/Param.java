@@ -9,5 +9,6 @@ public enum Param {
 	TO,
 	LIMIT,
 	ID,
-	FORMAT;
+	FORMAT,
+	PRINTNAMES;
 }

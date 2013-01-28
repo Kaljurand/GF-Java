@@ -2,6 +2,9 @@ concrete GoEst of Go = {
 
 	flags coding=utf8;
 
+	printname cat Direction = "suund" ;
+	printname fun n1 = "number üks" ;
+
 	lincat Go, Number, Unit, Direction = {s : Str};
 
 	lin

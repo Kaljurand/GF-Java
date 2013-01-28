@@ -25,6 +25,8 @@ Starting (requires GF version 2012-11-14 or newer):
 
 	$ GF_RESTRICTED=yes gf --server=41297 --document-root document-root
 
+(Might require the full path to the document-root directory.)
+
 See usage examples in `tools/test_gfws.sh`.
 
 ### JPGF

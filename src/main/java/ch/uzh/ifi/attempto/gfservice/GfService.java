@@ -183,6 +183,16 @@ public interface GfService {
 
 
 	/**
+	 * <p>Returns information about the functions (names, definitions, printnames) and
+	 * categories (names, definitions, printnames, producer functions, consumer functions).</p>
+	 *
+	 * @return GfServiceResultBrowseAll
+	 * @throws GfServiceException
+	 */
+	GfServiceResultBrowseAll browseAll() throws GfServiceException;
+
+
+	/**
 	 * <p>Generates prefixes of parseable strings obtained
 	 * from growing the input string one token at a time, exhaustively covering all
 	 * token lengths.</p>
