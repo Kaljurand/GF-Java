@@ -4,163 +4,193 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 /**
  * Structured representation of GF trees. Current features:
- *   - constructs GfTree from a strings, e.g. "a ((b c) d)", some syntax errors are tolerated
- *   - getter for all function names in the tree
+ *   - constructs GfTree from a strings, e.g. "a (b (c d)) e", some syntax errors are tolerated
+ *   - getter for all function names and leaf names in the tree
  */
 public class GfTree {
 
-	public static char SPACE = ' ';
-	public static char PLEFT = '(';
-	public static char PRIGHT = ')';
+	public static final char SPACE = ' ';
+	public static final char PLEFT = '(';
+	public static final char PRIGHT = ')';
 
 	// [ \t\n\x0B\f\r]
-	public static ImmutableSet<Character> LAYOUT_CHARS = ImmutableSet.of(SPACE, '\t', '\n', '\f', '\r');
+	public static final ImmutableSet<Character> LAYOUT_CHARS = ImmutableSet.of(SPACE, '\t', '\n', '\f', '\r');
 
-	private final Set<String> mFuns = Sets.newHashSet();
-	private final String mTreeAsStr;
+	private final GfFun mRoot;
+	private final Set<String> mFunctionNames;
+	private final Set<String> mLeafNames;
+	private final String mString;
 
 
-	/**
-	 * There are two kinds of nodes. Ones that have children and
-	 * the others that contain just the function name.
-	 */
-	public static class GfNode {
-		private final List<GfNode> mChildren;
-		private final String mFun;
-
-		public GfNode() {
-			mChildren = new ArrayList<GfNode>();
-			mFun = null;
+	// TODO: make immutable if exposed to the client
+	public static class GfFun {
+		private final String mName;
+		private List<GfFun> mArgs;
+		public GfFun(String name) {
+			mName = name;
 		}
 
-		public GfNode(String fun) {
-			mChildren = null;
-			mFun = fun;
-		}
-
-		public List<GfNode> getChildren() {
-			if (mChildren == null) {
-				return new ArrayList<GfNode>();
+		public void addArg(GfFun fun) {
+			if (mArgs == null) {
+				mArgs = new ArrayList<GfFun>();
 			}
-			return mChildren;
+			mArgs.add(fun);
 		}
 
-		public String getFun() {
-			return mFun;
+		public String getName() {
+			return mName;
 		}
 
-		public boolean hasChildren() {
-			return mChildren != null;
+		public List<GfFun> getArgs() {
+			if (mArgs == null) {
+				return ImmutableList.of();
+			}
+			return mArgs;
 		}
 
-		private void addChild(GfNode tree) {
-			mChildren.add(tree);
+		public boolean hasArgs() {
+			return mArgs != null;
 		}
 	}
 
 
 	public GfTree(String str) throws GfTreeParseException {
-		GfNode root = new GfNode();
-		int len = str.length();
-		int pos = consumeTree(str, 0, len, root);
-		if (pos != len) {
-			throw new GfTreeParseException(pos - 1);
+		StringBuilder name = new StringBuilder();
+		int end = consumeName(str, 0, name);
+		mRoot = new GfFun(name.toString());
+		end = consumeArgs(str, mRoot, end);
+		if (end != str.length()) {
+			throw new GfTreeParseException(end);
 		}
 
 		StringBuilder sb = new StringBuilder();
-		initData(root, sb, mFuns);
-		mTreeAsStr = sb.toString();
+		Set<String> funs = Sets.newHashSet();
+		Set<String> leaves = Sets.newHashSet();
+		initData(mRoot, sb, funs, leaves);
+		mFunctionNames = ImmutableSet.copyOf(funs);
+		mLeafNames = ImmutableSet.copyOf(leaves);
+		mString = sb.toString();
 	}
 
 
-	public Set<String> getFuns() {
-		return ImmutableSet.copyOf(mFuns);
+	public Set<String> getFunctionNames() {
+		return mFunctionNames;
 	}
 
-	public boolean hasFuns(String... funs) {
-		for (String fun : funs) {
-			if (! mFuns.contains(fun)) {
-				return false;
-			}
-		}
-		return true;
+	/**
+	 * Leaves are functions that have no arguments
+	 */
+	public Set<String> getLeafNames() {
+		return mLeafNames;
 	}
 
 	public String toString() {
-		return mTreeAsStr;
+		return mString;
 	}
+
+	public boolean hasFunctionNames(String... names) {
+		return hasNames(mFunctionNames, names);
+	}
+
+
+	public boolean hasLeafNames(String... names) {
+		return hasNames(mLeafNames, names);
+	}
+
 
 	public boolean equals(GfTree tree) {
 		return toString().equals(tree.toString());
 	}
 
 
-
-	private void initData(GfNode node, StringBuilder sb, Set<String> funs) {
-		if (node.hasChildren()) {
-			boolean firstChild = true;
-			for (GfNode child : node.getChildren()) {
-				if (! firstChild) {
-					sb.append(SPACE);
-				}
-				if (child.hasChildren()) {
-					sb.append(PLEFT);
-					initData(child, sb, funs);
-					sb.append(PRIGHT);
-				} else {
-					String fun = child.getFun();
-					sb.append(fun);
-					funs.add(fun);
-				}
-				firstChild = false;
+	private static boolean hasNames(Set<String> set, String... names) {
+		for (String name : names) {
+			if (! set.contains(name)) {
+				return false;
 			}
-		} else {
-			String fun = node.getFun();
-			sb.append(fun);
-			funs.add(fun);
+		}
+		return true;
+	}
+
+
+	private static void initData(GfFun fun, StringBuilder sb, Set<String> funs, Set<String> leaves) {
+		String name = fun.getName();
+		sb.append(name);
+		funs.add(name);
+		if (! fun.hasArgs()) {
+			leaves.add(name);
+		}
+		for (GfFun arg : fun.getArgs()) {
+			sb.append(SPACE);
+			if (arg.hasArgs()) {
+				sb.append(PLEFT);
+				initData(arg, sb, funs, leaves);
+				sb.append(PRIGHT);
+			} else {
+				initData(arg, sb, funs, leaves);
+			}
 		}
 	}
 
 
-	// returns the number of consumed characters
-	private static int consumeTree(String str, int begin, int end, GfNode tree) {
+	private static int consumeArgs(String str, GfFun fun, int begin) throws GfTreeParseException {
 		int i = begin;
-		while (i < end) {
+		while (i < str.length()) {
 			char ch = str.charAt(i);
-			if (ch == PRIGHT) {
-				return i + 1;
-			}
 			if (ch == PLEFT) {
-				GfNode subtree = new GfNode();
-				tree.addChild(subtree);
-				i = consumeTree(str, i + 1, end, subtree);
-				continue;
-			}
-			if (LAYOUT_CHARS.contains(ch)) {
 				i++;
-				continue;
+				StringBuilder sb = new StringBuilder();
+				int end = consumeName(str, i, sb);
+				GfFun funWithArgs = new GfFun(sb.toString());
+				fun.addArg(funWithArgs);
+				i = consumeArgs(str, funWithArgs, end);
+			} else if (LAYOUT_CHARS.contains(ch)) {
+				// Skip whitespace
+				i++;
+			} else if (ch == PRIGHT) {
+				i++;
+				break;
+			} else {
+				StringBuilder sb = new StringBuilder();
+				i = consumeName(str, i, sb);
+				fun.addArg(new GfFun(sb.toString()));
 			}
-			int j = i;
-			while (j < end) {
-				char sep = str.charAt(j);
-				if (sep == PLEFT || sep == PRIGHT || LAYOUT_CHARS.contains(sep)) {
-					GfNode leaf = new GfNode(str.substring(i, j));
-					tree.addChild(leaf);
+		}
+		return i;
+	}
+
+
+	private static int consumeName(String str, int begin, StringBuilder sb) throws GfTreeParseException {
+		int i = begin;
+		int start = -1;
+		while (i < str.length()) {
+			char ch = str.charAt(i);
+			if (LAYOUT_CHARS.contains(ch)) {
+				if (start != -1) {
 					break;
 				}
-				j++;
+				// ignore preceding whitespace
+			} else if (ch == PLEFT || ch == PRIGHT) {
+				break;
+			} else if (start == -1) {
+				start = i;
 			}
-			if (j == end) {
-				GfNode leaf = new GfNode(str.substring(i, j));
-				tree.addChild(leaf);
-			}
-			i = j;
+			i++;
 		}
-		return end;
+		if (start == -1) {
+			throw new GfTreeParseException(i);
+		}
+		sb.append(str.substring(start, i));
+		return i;
+	}
+
+	private static boolean isBorder(char ch) {
+		return LAYOUT_CHARS.contains(ch) || ch == ')' || ch == '(';
 	}
 }
