@@ -190,7 +190,4 @@ public class GfTree {
 		return i;
 	}
 
-	private static boolean isBorder(char ch) {
-		return LAYOUT_CHARS.contains(ch) || ch == ')' || ch == '(';
-	}
 }

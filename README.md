@@ -23,9 +23,12 @@ Documentation:
 
 Starting (requires GF version 2012-11-14 or newer):
 
-	$ GF_RESTRICTED=yes gf --server=41297 --document-root document-root
+	$ GF_RESTRICTED=yes gf --server=41297 --document-root `pwd`/document-root
 
 (Might require the full path to the document-root directory.)
+
+Note that the document root must contain a writeable subdirectory `tmp` for the storage
+commands to work.
 
 See usage examples in `tools/test_gfws.sh`.
 
