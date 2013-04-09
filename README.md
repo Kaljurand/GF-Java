@@ -61,3 +61,11 @@ this repository. To generate the required Eclipse files, run:
 
 	$ mvn -Declipse.workspace=/home/yourname/workspace/ eclipse:configure-workspace
 	$ mvn eclipse:eclipse
+
+
+Download
+--------
+
+Download the jar if building from source should fail:
+
+  - [v0.8.1](https://docs.google.com/file/d/0B5rlzd4hAZrEUF9jWXFfcHBHRFE/edit?usp=sharing)
