@@ -69,3 +69,11 @@ Download
 Download the jar if building from source should fail:
 
   - [v0.8.1](https://docs.google.com/file/d/0B5rlzd4hAZrEUF9jWXFfcHBHRFE/edit?usp=sharing)
+
+
+Funding
+-------
+
+The development of this software has been funded by:
+
+  - [EU 7th FP project MOLTO](http://www.molto-project.eu)
