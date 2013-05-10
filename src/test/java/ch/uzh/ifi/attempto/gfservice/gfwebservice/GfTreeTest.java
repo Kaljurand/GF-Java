@@ -60,6 +60,13 @@ public class GfTreeTest {
 		GfTree tree = testGfTree(T1_TREE);
 		assertEquals(ImmutableSet.of("a", "b", "c", "d", "1", "2", "3", "4", "5", "6"), tree.getFunctionNames());
 		assertEquals(ImmutableSet.of("1", "2", "3", "4", "5", "6"), tree.getLeafNames());
+		assertEquals(10, tree.size());
+	}
+
+	@Test
+	public void testGfTree1_7() {
+		GfTree tree = testGfTree(T7_TREE);
+		assertEquals(9, tree.size());
 	}
 
 	@Test

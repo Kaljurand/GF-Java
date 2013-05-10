@@ -23,6 +23,7 @@ public class GfTree {
 	public static final ImmutableSet<Character> LAYOUT_CHARS = ImmutableSet.of(SPACE, '\t', '\n', '\f', '\r');
 
 	private final GfFun mRoot;
+	private final int mSize;
 	private final Set<String> mFunctionNames;
 	private final Set<String> mLeafNames;
 	private final String mString;
@@ -72,12 +73,16 @@ public class GfTree {
 		StringBuilder sb = new StringBuilder();
 		Set<String> funs = Sets.newHashSet();
 		Set<String> leaves = Sets.newHashSet();
-		initData(mRoot, sb, funs, leaves);
+		mSize = initData(mRoot, sb, funs, leaves);
 		mFunctionNames = ImmutableSet.copyOf(funs);
 		mLeafNames = ImmutableSet.copyOf(leaves);
 		mString = sb.toString();
 	}
 
+
+	public int size() {
+		return mSize;
+	}
 
 	public Set<String> getFunctionNames() {
 		return mFunctionNames;
@@ -119,7 +124,8 @@ public class GfTree {
 	}
 
 
-	private static void initData(GfFun fun, StringBuilder sb, Set<String> funs, Set<String> leaves) {
+	private static int initData(GfFun fun, StringBuilder sb, Set<String> funs, Set<String> leaves) {
+		int funCount = 1;
 		String name = fun.getName();
 		sb.append(name);
 		funs.add(name);
@@ -130,12 +136,13 @@ public class GfTree {
 			sb.append(SPACE);
 			if (arg.hasArgs()) {
 				sb.append(PLEFT);
-				initData(arg, sb, funs, leaves);
+				funCount += initData(arg, sb, funs, leaves);
 				sb.append(PRIGHT);
 			} else {
-				initData(arg, sb, funs, leaves);
+				funCount += initData(arg, sb, funs, leaves);
 			}
 		}
+		return funCount;
 	}
 
 
