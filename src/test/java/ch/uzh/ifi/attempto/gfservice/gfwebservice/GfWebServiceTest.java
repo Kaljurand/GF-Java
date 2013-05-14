@@ -14,6 +14,7 @@ import java.util.Set;
 import ch.uzh.ifi.attempto.gfservice.DiagramFormat;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultBrowseAll;
 import ch.uzh.ifi.attempto.gfservice.GfServiceResultLinearizeAll;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimaps;
@@ -66,9 +67,9 @@ public class GfWebServiceTest {
 			"GoApp", ImmutableSet.of("1"));
 
 	private static final ImmutableMap T_LINEARIZE_ALL_2_OUT = ImmutableMap.of(
-			"GoEst", ImmutableSet.of("yks", "üks"),
-			"GoApp", ImmutableSet.of("1"),
-			"GoEng", ImmutableSet.of("one"));
+			"GoEst", ImmutableList.of("üks", "yks"),
+			"GoApp", ImmutableList.of("1"),
+			"GoEng", ImmutableList.of("one"));
 
 	private static final String T_COMPLETE_0_INPUT = "go t";
 	private static final Set<String> T_COMPLETE_0_OUT_COMPLETIONS = ImmutableSet.of("three", "two");
