@@ -71,6 +71,11 @@ Download the jar if building from source should fail:
   - [v0.8.1](https://docs.google.com/file/d/0B5rlzd4hAZrEUF9jWXFfcHBHRFE/edit?usp=sharing)
 
 
+Examples
+--------
+
+  - using the library from Clojure: [saludes/gf-java.clj](https://gist.github.com/saludes/9364597)
+
 Funding
 -------
 
